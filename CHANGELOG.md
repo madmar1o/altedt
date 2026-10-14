@@ -5,6 +5,14 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/),
 и этот проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
 
+## [0.9.16] - 2026-10-14
+
+
+### Исправления
+
+- **vrunner:** Передали явную строку подключения в команду
+
+
 ## [0.9.15] - 2026-10-08
 
 
