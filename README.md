@@ -20,9 +20,9 @@
 
 | # | Этап | Статус |
 |---|---|---|
-| 0 | Инфраструктура: git ×2, клон форка, сборка `.vsix`, реестр баз | в работе |
-| 1 | Аудит форка (структура команд, отладчик, список баз) | план |
-| 2 | Панель «Базы» — 3 источника: `ibases.v8i` / `.v8-project.json` / профили (`IBaseProvider`) | MVP |
+| 0 | Инфраструктура: git ×2, клон форка, сборка `.vsix`, реестр баз | ✅ |
+| 1 | Аудит форка (структура команд, отладчик, список баз) | ✅ |
+| 2 | Панель «Базы» — 3 источника: `ibases.v8i` / `.v8-project.json` / профили (`baseSources.ts`, 12 unit-тестов) | ✅ |
 | 3 | Мастер профилей (GUI вместо JSON) + универсальный запуск 6 режимов (`ILaunchMode`) | MVP |
 | 4 | Отладка 1С: встроенный отладчик форка на 8.3.25/8.3.27 + `onec-debug-adapter` при необходимости | план |
 | 5 | Плагин-механизм: публичный `AltEdtApi` (registerBaseProvider / registerLaunchMode / registerCommandGroup / registerPanel) | план |
@@ -40,6 +40,22 @@
   `Connect=File="..."` / `Srvr="...";Ref="..."`, `Folder=/`, `App=Auto`
 - Тестовая файловая база: `C:\open-project\vc\BD`
 - Кэш Redis/Qdrant (Docker) — **по необходимости**, не блокирует разработку
+
+## Ключевые находки аудита форка
+
+- **Список баз**: `src/features/ibases/` — `IbasesProvider` принимает инжектируемый
+  ридер записей; парсер `ibases.v8i` и watcher — в `src/shared/infobaseList.ts`.
+  Этап 2 подключил сюда же `baseSources.ts` (реестр `.v8-project.json` + профили запуска).
+- **Профили запуска**: `src/shared/envProfiles.ts` — профиль = файл `env*.json`
+  (vrunner 2.x, опции в секции `default` с префиксом `--`) либо
+  `autumn-properties*.json` (3.x, секция `vrunner` без префикса); `env.local.json`
+  — зарезервированное перекрытие. JSONC-разбор — `src/shared/settingsJson.ts`.
+- **Отладка**: у форка уже есть вкладка «Запуск и отладка» с отладчиком
+  «1Cpt: Enterprise Debugger» (см. `docs/debug.md` форка) — этап 4 в основном аудит+тесты.
+- **Редактор профиля**: custom editor `1c-platform-tools.profileEditor` для
+  `env*.json` уже есть — часть этапа 3 готова, надо только расширить мастером.
+- **Запуск**: `src/features/ibases/cestart.ts` (запуск через `1cestart` по строке
+  `Connect`), `src/features/launch/launchFeature.ts` (командные профили запуска).
 
 ## Как запустить разработку плагина
 
