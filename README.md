@@ -25,7 +25,7 @@
 | 2 | Панель «Базы» — 3 источника: `ibases.v8i` / `.v8-project.json` / профили (`baseSources.ts`, 12 unit-тестов) | ✅ |
 | 3 | Мастер профилей (GUI вместо JSON) + универсальный запуск 6 режимов (`launchModes.ts`) | ✅ |
 | 4 | Отладка 1С: встроенный отладчик форка + отладка выбранной базы из списка (`debugDap`) | ✅ |
-| 5 | Плагин-механизм: публичный `AltEdtApi` (registerBaseProvider / registerLaunchMode / registerCommandGroup / registerPanel) | план |
+| 5 | Плагин-механизм: публичный `AltEdtApi` (registerBaseProvider / registerLaunchMode / registerCommandGroup / registerPanel) | ✅ |
 | 6 | Тестовый контур: фикстуры-расширения, dry-run, unit/smoke/E2E, CI | план |
 | 7 | Дифф-загрузка: git-diff/objlist/UpdateDBCfg → хранилище 1С → дифф EDT (`.mdo`) | план |
 | 8 | Полировка: имя AltEDT, иконки, README, опционально `bsl-language-server` | план |
