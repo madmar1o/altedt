@@ -24,7 +24,7 @@
 | 1 | Аудит форка (структура команд, отладчик, список баз) | ✅ |
 | 2 | Панель «Базы» — 3 источника: `ibases.v8i` / `.v8-project.json` / профили (`baseSources.ts`, 12 unit-тестов) | ✅ |
 | 3 | Мастер профилей (GUI вместо JSON) + универсальный запуск 6 режимов (`launchModes.ts`) | ✅ |
-| 4 | Отладка 1С: встроенный отладчик форка на 8.3.25/8.3.27 + `onec-debug-adapter` при необходимости | план |
+| 4 | Отладка 1С: встроенный отладчик форка + отладка выбранной базы из списка (`debugDap`) | ✅ |
 | 5 | Плагин-механизм: публичный `AltEdtApi` (registerBaseProvider / registerLaunchMode / registerCommandGroup / registerPanel) | план |
 | 6 | Тестовый контур: фикстуры-расширения, dry-run, unit/smoke/E2E, CI | план |
 | 7 | Дифф-загрузка: git-diff/objlist/UpdateDBCfg → хранилище 1С → дифф EDT (`.mdo`) | план |
