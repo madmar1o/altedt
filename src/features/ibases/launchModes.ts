@@ -17,6 +17,7 @@ export type LaunchModeId =
 	| 'enterprise'
 	| 'enterpriseThick'
 	| 'debug'
+	| 'debugDap'
 	| 'configurator'
 	| 'web'
 	| 'server';
@@ -63,6 +64,12 @@ export const LAUNCH_MODES: readonly LaunchMode[] = [
 		label: 'Предприятие с отладкой',
 		description: 'Ключ /DEBUG — отладчик ждёт подключения',
 		icon: 'debug-alt',
+	},
+	{
+		id: 'debugDap',
+		label: 'Отладка (VS Code)',
+		description: 'Запуск через onec-debug-adapter с выбранной базой',
+		icon: 'debug',
 	},
 	{ id: 'configurator', label: 'Конфигуратор', icon: 'tools' },
 	{

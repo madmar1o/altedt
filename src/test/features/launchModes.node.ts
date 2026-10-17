@@ -7,13 +7,13 @@ import assert from 'node:assert/strict';
 import { cestartSpec, LAUNCH_MODES, type LaunchModeId } from '../../features/ibases/launchModes';
 
 describe('модель режимов запуска', () => {
-	test('режимов шесть, идентификаторы уникальны', () => {
-		assert.equal(LAUNCH_MODES.length, 6);
+	test('режимов семь, идентификаторы уникальны', () => {
+		assert.equal(LAUNCH_MODES.length, 7);
 		const ids = LAUNCH_MODES.map((mode) => mode.id);
 		assert.equal(new Set(ids).size, ids.length);
 		assert.deepEqual(
 			ids.sort(),
-			['configurator', 'debug', 'enterprise', 'enterpriseThick', 'server', 'web'].sort()
+			['configurator', 'debug', 'debugDap', 'enterprise', 'enterpriseThick', 'server', 'web'].sort()
 		);
 	});
 
@@ -24,9 +24,10 @@ describe('модель режимов запуска', () => {
 		}
 	});
 
-	test('cestartSpec: у ibsrv-режимов спецификации нет', () => {
+	test('cestartSpec: у ibsrv- и DAP-режимов спецификации нет', () => {
 		assert.equal(cestartSpec('web'), undefined);
 		assert.equal(cestartSpec('server'), undefined);
+		assert.equal(cestartSpec('debugDap'), undefined);
 	});
 
 	test('cestartSpec: толстый клиент — ENTERPRISE с ключом /C thick', () => {

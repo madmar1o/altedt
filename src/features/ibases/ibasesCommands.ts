@@ -17,6 +17,9 @@ import {
 } from './cestart';
 import { launchEdtStart } from './edtStart';
 import { cestartSpec, LAUNCH_MODES, type LaunchModeId } from './launchModes';
+import { cestartConnectionArg } from './cestart';
+import { DEBUG_TYPE } from '../debug/debugConstants';
+import { currentRoot } from '../../shared/workspaceProjects';
 import type { IbasesProvider } from './ibasesProvider';
 import { IbaseItem } from './nodes';
 
@@ -204,6 +207,55 @@ async function pickServerAction(): Promise<void> {
 }
 
 /**
+ * Запускает отладку базы через onec-debug-adapter.
+ *
+ * Строка подключения берётся из записи списка (не из активного профиля):
+ * пользователь явно выбрал базу для отладки. Провайдер конфигураций
+ * отладки использует именно это значение.
+ *
+ * @param entry - Запись списка
+ * @returns Промис, который разрешается после запуска или отказа
+ */
+async function runDebugDap(entry: InfobaseEntry): Promise<void> {
+	const connectionArg = cestartConnectionArg(entry.connect);
+	if (!connectionArg) {
+		void vscode.window.showErrorMessage(
+			`Не удалось определить строку подключения для базы «${entry.name}».`
+		);
+		return;
+	}
+
+	const workspaceRoot = currentRoot();
+	if (!workspaceRoot) {
+		void vscode.window.showErrorMessage('Откройте папку с проектом перед отладкой.');
+		return;
+	}
+
+	const workspaceFolder = vscode.workspace.workspaceFolders?.find(
+		(folder) => folder.uri.fsPath === workspaceRoot
+	);
+	if (!workspaceFolder) {
+		void vscode.window.showErrorMessage('Не удалось определить папку рабочей области для отладки.');
+		return;
+	}
+
+	const config: vscode.DebugConfiguration = {
+		name: `Отладка «${entry.name}»`,
+		type: DEBUG_TYPE,
+		request: 'launch',
+		connectionString: connectionArg,
+		rootProject: workspaceRoot,
+		debugServerHost: 'localhost',
+		autoAttachTypes: ['ManagedClient', 'Server'],
+	};
+
+	const started = await vscode.debug.startDebugging(workspaceFolder, config);
+	if (!started) {
+		void vscode.window.showErrorMessage(`Не удалось начать отладку базы «${entry.name}».`);
+	}
+}
+
+/**
  * Запускает базу в выбранном режиме.
  *
  * @param entry - Запись списка
@@ -217,6 +269,10 @@ async function runInfobaseWithMode(entry: InfobaseEntry, id: LaunchModeId): Prom
 	}
 	if (id === 'server') {
 		await pickServerAction();
+		return;
+	}
+	if (id === 'debugDap') {
+		await runDebugDap(entry);
 		return;
 	}
 	const spec = cestartSpec(id);

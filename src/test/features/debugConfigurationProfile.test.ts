@@ -36,4 +36,32 @@ suite('отладка: профиль запуска', () => {
 
 		assert.strictEqual(resolved?.connectionString, '/Slocalhost\\ib');
 	});
+
+	test('явный connectionString в конфигурации важнее активного профиля', async () => {
+		const provider = new OnecDebugConfigurationProvoider(vrunnerWithLateVersion());
+		const config: vscode.DebugConfiguration = {
+			type: DEBUG_TYPE,
+			request: 'attach',
+			name: 'Отладка',
+			connectionString: '/F"C:\\explicit\\ib"',
+		};
+
+		const resolved = await runWithProject(PROJECT, () => provider.resolveDebugConfiguration(undefined, config));
+
+		assert.strictEqual(resolved?.connectionString, '/F"C:\\explicit\\ib"');
+	});
+
+	test('пустой connectionString откатывается на активный профиль', async () => {
+		const provider = new OnecDebugConfigurationProvoider(vrunnerWithLateVersion());
+		const config: vscode.DebugConfiguration = {
+			type: DEBUG_TYPE,
+			request: 'attach',
+			name: 'Отладка',
+			connectionString: '   ',
+		};
+
+		const resolved = await runWithProject(PROJECT, () => provider.resolveDebugConfiguration(undefined, config));
+
+		assert.strictEqual(resolved?.connectionString, '/F./build/ib');
+	});
 });
