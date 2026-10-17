@@ -20,6 +20,7 @@ import { cestartSpec, LAUNCH_MODES, type LaunchModeId } from './launchModes';
 import { cestartConnectionArg } from './cestart';
 import { DEBUG_TYPE } from '../debug/debugConstants';
 import { currentRoot } from '../../shared/workspaceProjects';
+import { altEdtLaunchModes } from '../../shared/altEdtRegistry';
 import type { IbasesProvider } from './ibasesProvider';
 import { IbaseItem } from './nodes';
 
@@ -259,10 +260,10 @@ async function runDebugDap(entry: InfobaseEntry): Promise<void> {
  * Запускает базу в выбранном режиме.
  *
  * @param entry - Запись списка
- * @param id - Режим: стартер платформы либо действия ibsrv
+ * @param id - Режим: стартер платформы, действия ibsrv или сторонний режим
  * @returns Промис, который разрешается после запуска или отказа
  */
-async function runInfobaseWithMode(entry: InfobaseEntry, id: LaunchModeId): Promise<void> {
+async function runInfobaseWithMode(entry: InfobaseEntry, id: string): Promise<void> {
 	if (id === 'web') {
 		await vscode.commands.executeCommand('1c-platform-tools.server.openInBrowser');
 		return;
@@ -275,7 +276,12 @@ async function runInfobaseWithMode(entry: InfobaseEntry, id: LaunchModeId): Prom
 		await runDebugDap(entry);
 		return;
 	}
-	const spec = cestartSpec(id);
+	const external = altEdtLaunchModes().find((mode) => mode.id === id);
+	if (external) {
+		await external.launch({ name: entry.name, connect: entry.connect });
+		return;
+	}
+	const spec = cestartSpec(id as LaunchModeId);
 	if (!spec) {
 		return;
 	}
@@ -294,11 +300,18 @@ async function showLaunchModePicker(node: unknown): Promise<void> {
 		return;
 	}
 	const picked = await vscode.window.showQuickPick(
-		LAUNCH_MODES.map((mode) => ({
-			label: `$(${mode.icon}) ${mode.label}`,
-			description: mode.description,
-			id: mode.id,
-		})),
+		[
+			...LAUNCH_MODES.map((mode) => ({
+				label: `$(${mode.icon}) ${mode.label}`,
+				description: mode.description,
+				id: mode.id,
+			})),
+			...altEdtLaunchModes().map((mode) => ({
+				label: `$(extensions) ${mode.label}`,
+				description: mode.description,
+				id: mode.id,
+			})),
+		],
 		{ title: `Запустить «${entry.name}»`, placeHolder: 'Режим запуска' }
 	);
 	if (picked) {

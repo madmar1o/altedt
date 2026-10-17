@@ -15,6 +15,7 @@ import * as path from 'node:path';
 import { parseEnvFileName, type EnvProfile } from '../../shared/envProfiles';
 import { readInfobases, type InfobaseEntry } from '../../shared/infobaseList';
 import { readSettingsJsonSync } from '../../shared/settingsJson';
+import { altEdtBaseProviders } from '../../shared/altEdtRegistry';
 
 /** Имя файла реестра информационных баз проекта. */
 export const PROJECT_REGISTRY_FILE = '.v8-project.json';
@@ -253,6 +254,13 @@ export function readWorkspaceBases(
 	for (const root of roots) {
 		append(readProjectRegistry(root));
 		append(readLaunchProfiles(root));
+	}
+	for (const provider of altEdtBaseProviders()) {
+		try {
+			append(provider.read());
+		} catch {
+			// Сторонний провайдер не должен ронять панель
+		}
 	}
 	return out;
 }

@@ -39,6 +39,7 @@ import { initTerminalEnv } from '../shared/terminalEnv';
 import { onWorkspaceTrustGranted } from '../shared/workspaceTrust';
 import { registerProjectLayoutWatch } from '../shared/projectLayoutWatch';
 import { hasProjects, initWorkspaceProjects } from '../shared/workspaceProjects';
+import { altEdtCommandGroups, altEdtPanels } from '../shared/altEdtRegistry';
 
 /**
  * Выполняет полную инициализацию расширения.
@@ -158,6 +159,34 @@ export async function bootstrapApp(context: vscode.ExtensionContext): Promise<vo
 		...tasksFeatureDisposables,
 		...clustersFeatureDisposables,
 		...ibasesFeatureDisposables,
-		...commandDisposables
+		...commandDisposables,
+		...registerThirdPartyCommands()
 	);
+}
+
+/**
+ * Регистрирует команды и панели сторонних расширений AltEDT.
+ *
+ * @returns Подписки на команды и панели сторонних расширений.
+ */
+function registerThirdPartyCommands(): vscode.Disposable[] {
+	const disposables: vscode.Disposable[] = [];
+	for (const group of altEdtCommandGroups()) {
+		for (const [commandId, title] of Object.entries(group.commands)) {
+			disposables.push(
+				vscode.commands.registerCommand(`${group.id}.${commandId}`, async () => {
+					// Сторонние команды выполняют логику через свой API
+					void group.id;
+					void title;
+				})
+			);
+		}
+	}
+	for (const panel of altEdtPanels()) {
+		const provider = panel.getTreeDataProvider();
+		if (provider) {
+			disposables.push(vscode.window.registerTreeDataProvider(panel.id, provider as never));
+		}
+	}
+	return disposables;
 }
