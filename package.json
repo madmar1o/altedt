@@ -857,6 +857,12 @@
         "icon": "$(tools)"
       },
       {
+        "command": "1c-platform-tools.infobaseList.launchWithMode",
+        "title": "Запустить базу… (режим)",
+        "category": "1С: Администрирование",
+        "icon": "$(device-desktop)"
+      },
+      {
         "command": "1c-platform-tools.infobaseList.openStartWindow",
         "title": "Открыть окно запуска платформы",
         "category": "1С: Администрирование",
@@ -2440,6 +2446,10 @@
           "when": "false"
         },
         {
+          "command": "1c-platform-tools.infobaseList.launchWithMode",
+          "when": "false"
+        },
+        {
           "command": "1c-platform-tools.debug.showVariableInWindow",
           "when": "false"
         },
@@ -3165,6 +3175,11 @@
           "command": "1c-platform-tools.infobaseList.launchDesigner",
           "when": "view == 1c-platform-tools-admin-infobases && viewItem == ibase",
           "group": "inline@2"
+        },
+        {
+          "command": "1c-platform-tools.infobaseList.launchWithMode",
+          "when": "view == 1c-platform-tools-admin-infobases && viewItem == ibase",
+          "group": "1_mode@0"
         },
         {
           "command": "1c-platform-tools.clusters.properties",
@@ -4927,7 +4942,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --max-warnings 0",
     "test": "vscode-test && npm run test:node",
-    "test:node": "node --test out/test/shared/skillMcpNames.node.js out/test/shared/gitHead.node.js out/test/shared/ovmPaths.node.js out/test/shared/processOutput.node.js out/test/utils/shellArgvRoundtrip.node.js out/test/shared/executableLookup.node.js out/test/testing/mutatosRun.node.js out/test/testing/mutatosSources.node.js out/test/testing/mutatosReport.node.js out/test/spreadsheet/spreadsheetHtml.node.js out/test/features/odata.node.js out/test/features/baseSources.node.js out/test/metadata/erTheme.node.js out/test/testing/yaxunitReleases.node.js out/test/metadata/erExport.node.js",
+    "test:node": "node --test out/test/shared/skillMcpNames.node.js out/test/shared/gitHead.node.js out/test/shared/ovmPaths.node.js out/test/shared/processOutput.node.js out/test/utils/shellArgvRoundtrip.node.js out/test/shared/executableLookup.node.js out/test/testing/mutatosRun.node.js out/test/testing/mutatosSources.node.js out/test/testing/mutatosReport.node.js out/test/spreadsheet/spreadsheetHtml.node.js out/test/features/odata.node.js out/test/features/baseSources.node.js out/test/features/launchModes.node.js out/test/metadata/erTheme.node.js out/test/testing/yaxunitReleases.node.js out/test/metadata/erExport.node.js",
     "package": "vsce package",
     "changelog": "git-cliff --config cliff.toml --output CHANGELOG.md",
     "docs:dev": "vitepress dev docs",

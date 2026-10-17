@@ -16,10 +16,20 @@ import {
 	type CestartMode,
 } from './cestart';
 import { launchEdtStart } from './edtStart';
+import { cestartSpec, LAUNCH_MODES, type LaunchModeId } from './launchModes';
 import type { IbasesProvider } from './ibasesProvider';
 import { IbaseItem } from './nodes';
 
 const log = logger.scope('ibases');
+
+/** Команды ibsrv, которые предлагает палитра режима «Автономный сервер». */
+const SERVER_ACTIONS: ReadonlyArray<{ command: string; label: string; icon: string }> = [
+	{ command: '1c-platform-tools.server.start', label: 'Запустить сервер', icon: 'play' },
+	{ command: '1c-platform-tools.server.debug', label: 'Запустить с отладкой', icon: 'debug-alt' },
+	{ command: '1c-platform-tools.server.openInBrowser', label: 'Открыть в браузере', icon: 'globe' },
+	{ command: '1c-platform-tools.server.showLogs', label: 'Показать журнал', icon: 'output' },
+	{ command: '1c-platform-tools.server.stop', label: 'Остановить', icon: 'debug-stop' },
+];
 
 const ENTERPRISE_BUTTON: vscode.QuickInputButton = {
 	iconPath: new vscode.ThemeIcon('play'),
@@ -41,9 +51,10 @@ interface IbasePickItem extends vscode.QuickPickItem {
  *
  * @param entry - Запись списка платформы
  * @param mode - Предприятие или Конфигуратор
+ * @param extraArgs - Дополнительные ключи стартеру (режимы толстый клиент, отладка)
  * @returns Промис, который разрешается после запуска или отказа
  */
-async function runInfobase(entry: InfobaseEntry, mode: CestartMode): Promise<void> {
+async function runInfobase(entry: InfobaseEntry, mode: CestartMode, extraArgs: readonly string[] = []): Promise<void> {
 	const result = launchInfobase(entry.name, mode, {
 		roots: projectPlatformRoots(),
 		connect: entry.connect,
@@ -51,6 +62,7 @@ async function runInfobase(entry: InfobaseEntry, mode: CestartMode): Promise<voi
 			entry.name,
 			readInfobases().map((item) => item.name)
 		),
+		extraArgs,
 	});
 	if (result.ok) {
 		log.info(`запуск ${mode} «${entry.name}»: ${result.binary} ${result.args.join(' ')}`);
@@ -177,6 +189,68 @@ async function showInfobaseList(): Promise<void> {
 }
 
 /**
+ * Показывает действия автономного сервера ibsrv и выполняет выбранное.
+ *
+ * @returns Промис, который разрешается после выбора или отказа
+ */
+async function pickServerAction(): Promise<void> {
+	const picked = await vscode.window.showQuickPick(
+		SERVER_ACTIONS.map((action) => ({ label: `$(${action.icon}) ${action.label}`, command: action.command })),
+		{ title: 'Автономный сервер ibsrv', placeHolder: 'Действие' }
+	);
+	if (picked) {
+		await vscode.commands.executeCommand(picked.command);
+	}
+}
+
+/**
+ * Запускает базу в выбранном режиме.
+ *
+ * @param entry - Запись списка
+ * @param id - Режим: стартер платформы либо действия ibsrv
+ * @returns Промис, который разрешается после запуска или отказа
+ */
+async function runInfobaseWithMode(entry: InfobaseEntry, id: LaunchModeId): Promise<void> {
+	if (id === 'web') {
+		await vscode.commands.executeCommand('1c-platform-tools.server.openInBrowser');
+		return;
+	}
+	if (id === 'server') {
+		await pickServerAction();
+		return;
+	}
+	const spec = cestartSpec(id);
+	if (!spec) {
+		return;
+	}
+	await runInfobase(entry, spec.mode, spec.extraArgs);
+}
+
+/**
+ * Показывает палитру режимов запуска для базы и выполняет выбранное.
+ *
+ * @param node - Узел дерева базы
+ * @returns Промис, который разрешается после выбора или отказа
+ */
+async function showLaunchModePicker(node: unknown): Promise<void> {
+	const entry = ibaseEntryFrom(node);
+	if (!entry) {
+		return;
+	}
+	const picked = await vscode.window.showQuickPick(
+		LAUNCH_MODES.map((mode) => ({
+			label: `$(${mode.icon}) ${mode.label}`,
+			description: mode.description,
+			id: mode.id,
+		})),
+		{ title: `Запустить «${entry.name}»`, placeHolder: 'Режим запуска' }
+	);
+	if (picked) {
+		await runInfobaseWithMode(entry, picked.id);
+	}
+}
+
+/**
  * Регистрирует команды списка информационных баз.
  *
  * @param provider - Дерево списка
@@ -201,6 +275,9 @@ export function registerIbasesCommands(provider: IbasesProvider): vscode.Disposa
 				return;
 			}
 			await runInfobase(entry, 'DESIGNER');
+		}),
+		vscode.commands.registerCommand('1c-platform-tools.infobaseList.launchWithMode', async (node: unknown) => {
+			await showLaunchModePicker(node);
 		}),
 		vscode.commands.registerCommand('1c-platform-tools.infobaseList.openStartWindow', () => openStartWindow()),
 		vscode.commands.registerCommand('1c-platform-tools.infobaseList.openEdtStart', () => openEdtStart()),

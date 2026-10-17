@@ -266,6 +266,8 @@ export interface LaunchInfobaseDeps {
 	readonly connect?: string;
 	readonly useIbName?: boolean;
 	readonly exists?: (filePath: string) => boolean;
+	/** Дополнительные ключи стартеру после штатных, например `/C thick` (толстый клиент). */
+	readonly extraArgs?: readonly string[];
 }
 
 /**
@@ -299,10 +301,13 @@ export function launchInfobase(
 		return { ok: false, message: `Каталог базы не найден: ${missingIb}` };
 	}
 	try {
-		const args = cestartArgs(mode, ibName, {
-			connect: deps.connect,
-			useIbName: deps.useIbName,
-		});
+		const args = [
+			...cestartArgs(mode, ibName, {
+				connect: deps.connect,
+				useIbName: deps.useIbName,
+			}),
+			...(deps.extraArgs ?? []),
+		];
 		const run = deps.spawn ?? ((command: string, spawnArgs: readonly string[]) => spawnDetached(command, spawnArgs));
 		run(lookup.binary, args);
 		return { ok: true, binary: lookup.binary, args };
