@@ -1,0 +1,39 @@
+{
+  "name": "alt-edt-test-fixtures",
+  "displayName": "AltEDT Test Fixtures",
+  "description": "Тестовое расширение для проверки AltEdtApi",
+  "version": "0.0.1",
+  "publisher": "alt-edt",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "alt-edt-test-fixtures.hello",
+        "title": "AltEDT Fixture: Hello"
+      }
+    ]
+  },
+  "altEdt": {
+    "contributes": {
+      "baseProviders": [
+        {
+          "id": "fixtures.provider",
+          "folder": "/Фикстуры"
+        }
+      ],
+      "launchModes": [
+        {
+          "id": "fixtures.custom",
+          "label": "Кастомный режим (фикстура)"
+        }
+      ]
+    }
+  }
+}

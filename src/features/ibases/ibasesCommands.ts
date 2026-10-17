@@ -59,6 +59,21 @@ interface IbasePickItem extends vscode.QuickPickItem {
  * @returns Промис, который разрешается после запуска или отказа
  */
 async function runInfobase(entry: InfobaseEntry, mode: CestartMode, extraArgs: readonly string[] = []): Promise<void> {
+	const dryRun = vscode.workspace.getConfiguration('1c-platform-tools').get<boolean>('execution.dryRun', false);
+	if (dryRun) {
+		const result = launchInfobase(entry.name, mode, {
+			roots: projectPlatformRoots(),
+			connect: entry.connect,
+			useIbName: shouldPassIbName(entry.name, readInfobases().map((item) => item.name)),
+			extraArgs,
+		});
+		if (result.ok) {
+			log.info(`[dry-run] ${result.binary} ${result.args.join(' ')}`);
+			return;
+		}
+		await showLaunchFailure(result.message);
+		return;
+	}
 	const result = launchInfobase(entry.name, mode, {
 		roots: projectPlatformRoots(),
 		connect: entry.connect,
@@ -232,6 +247,12 @@ async function runDebugDap(entry: InfobaseEntry): Promise<void> {
 		return;
 	}
 
+	const dryRun = vscode.workspace.getConfiguration('1c-platform-tools').get<boolean>('execution.dryRun', false);
+	if (dryRun) {
+		log.info(`[dry-run] отладка «${entry.name}»: connectionString=${connectionArg}, rootProject=${workspaceRoot}`);
+		return;
+	}
+
 	const workspaceFolder = vscode.workspace.workspaceFolders?.find(
 		(folder) => folder.uri.fsPath === workspaceRoot
 	);
@@ -264,11 +285,20 @@ async function runDebugDap(entry: InfobaseEntry): Promise<void> {
  * @returns Промис, который разрешается после запуска или отказа
  */
 async function runInfobaseWithMode(entry: InfobaseEntry, id: string): Promise<void> {
+	const dryRun = vscode.workspace.getConfiguration('1c-platform-tools').get<boolean>('execution.dryRun', false);
 	if (id === 'web') {
+		if (dryRun) {
+			log.info(`[dry-run] открыть веб-клиент для базы «${entry.name}» через ibsrv`);
+			return;
+		}
 		await vscode.commands.executeCommand('1c-platform-tools.server.openInBrowser');
 		return;
 	}
 	if (id === 'server') {
+		if (dryRun) {
+			log.info(`[dry-run] действия с автономным сервером ibsrv для базы «${entry.name}»`);
+			return;
+		}
 		await pickServerAction();
 		return;
 	}
@@ -278,6 +308,10 @@ async function runInfobaseWithMode(entry: InfobaseEntry, id: string): Promise<vo
 	}
 	const external = altEdtLaunchModes().find((mode) => mode.id === id);
 	if (external) {
+		if (dryRun) {
+			log.info(`[dry-run] сторонний режим «${external.id}» для базы «${entry.name}»`);
+			return;
+		}
 		await external.launch({ name: entry.name, connect: entry.connect });
 		return;
 	}
