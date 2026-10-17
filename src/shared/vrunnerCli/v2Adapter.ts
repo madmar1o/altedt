@@ -98,6 +98,14 @@ export class V2CliAdapter implements VRunnerCliAdapter {
 				}
 				return plan;
 			}
+			case 'cf.loadFromStorage': {
+				// Загрузка из хранилища: сначала выгрузка в исходники, затем загрузка в ИБ.
+				const plan = [['load', '--storage', intent.storageAddress, '--src', intent.src, ...common(intent)]];
+				if (intent.updateDb) {
+					plan.push(['updatedb', ...common(intent)]);
+				}
+				return plan;
+			}
 
 			// ---- Расширения ----
 			case 'cfe.buildCfe':

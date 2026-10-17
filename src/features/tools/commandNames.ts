@@ -625,6 +625,17 @@ export function getLoadConfigurationFromFilesByListCommandName(): CommandNameAnd
 	};
 }
 
+/**
+ * Получить название и заголовок для команды загрузки конфигурации из хранилища 1С
+ */
+export function getLoadConfigurationFromStorageCommandName(): CommandNameAndTitle {
+	return {
+		id: '1c-platform-tools.cf.loadFromStorage',
+		name: 'Загрузить из хранилища 1С',
+		title: 'Загрузить из хранилища 1С'
+	};
+}
+
 // ============================================================================
 // Команды для работы с расширениями
 // ============================================================================

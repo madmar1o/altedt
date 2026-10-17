@@ -215,6 +215,13 @@ export class V3CliAdapter implements VRunnerCliAdapter {
 				const options = intent.updateDb ? [] : ['--no-update-db'];
 				return [cmd(['cf', 'load'], [...options, ...common(intent)], [intent.file])];
 			}
+			case 'cf.loadFromStorage': {
+				const options = ['--storage', intent.storageAddress, '--src', intent.src];
+				if (!intent.updateDb) {
+					options.push('--no-update-db');
+				}
+				return [cmd(['cf', 'load'], [...options, ...common(intent)], [intent.src])];
+			}
 
 			// ---- Расширения ----
 			case 'cfe.buildCfe': {

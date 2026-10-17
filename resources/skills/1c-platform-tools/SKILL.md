@@ -46,6 +46,7 @@ description: "Операции с платформой 1С в этом прое�
 | Загрузить из исходного кода | `1c-platform-tools.cf.load` | `cf_load` |
 | Загрузить изменения | `1c-platform-tools.cf.loadIncrement` | `cf_loadInc` |
 | Загрузить из objlist.txt | `1c-platform-tools.cf.loadByList` | `cf_loadByList` |
+| Загрузить из хранилища 1С | `1c-platform-tools.cf.loadFromStorage` | `cf_loadFromStorage` |
 | Загрузить из 1Cv8.cf | `1c-platform-tools.cf.loadFile` | `cf_loadFile` |
 | Выгрузить в исходный код | `1c-platform-tools.cf.dump` | `cf_dump` |
 | Выгрузить изменения | `1c-platform-tools.cf.dumpIncrement` | `cf_dumpInc` |

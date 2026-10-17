@@ -282,6 +282,9 @@ export function registerCommands(
 		registerVRunnerCommand('1c-platform-tools.cf.loadByList', (opts) =>
 			commands.configuration.loadFromFilesByList(opts)
 		),
+		registerVRunnerCommand('1c-platform-tools.cf.loadFromStorage', (opts) =>
+			commands.configuration.loadFromStorage(opts)
+		),
 		registerVRunnerCommand('1c-platform-tools.cf.loadFile', (opts) =>
 			commands.configuration.loadFromCf(opts)
 		),

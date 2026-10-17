@@ -13,7 +13,8 @@ import {
 	getBuildConfigurationCommandName,
 	getDecompileConfigurationCommandName,
 	getLoadConfigurationIncrementFromSrcCommandName,
-	getLoadConfigurationFromFilesByListCommandName
+	getLoadConfigurationFromFilesByListCommandName,
+	getLoadConfigurationFromStorageCommandName
 } from '../features/tools/commandNames';
 import { configurationScope } from '../shared/activeConfiguration';
 import { CONVERTED_CONFIGURATION_DIR, convertSourcesWithEdt } from '../features/edt/edtConvert';
@@ -497,6 +498,56 @@ export class ConfigurationCommands extends BaseCommand {
 				common: ibConnectionParam,
 			},
 			opts, loadByListCmd.title, undefined, loadByListCmd.id
+		);
+	}
+
+	async loadFromStorage(opts?: CommandExecutionOptions): Promise<StructuredCommandResult | void> {
+		const reject = this.rejectIfWait(
+			opts,
+			'Загрузка из хранилища требует ввода адреса хранилища в UI; wait: true недоступен'
+		);
+		if (reject) {
+			return reject;
+		}
+
+		const workspaceRoot = this.ensureWorkspace();
+		if (!workspaceRoot || !(await this.ensureOscriptAvailable())) {
+			return;
+		}
+
+		const srcPath = await this.requireCfPath(opts);
+		if (typeof srcPath !== 'string') {
+			return srcPath;
+		}
+		const edt = await this.refuseEdtConfiguration(opts);
+		if (edt !== null) {
+			return edt;
+		}
+
+		const storageAddress = await vscode.window.showInputBox({
+			prompt: 'Введите адрес хранилища конфигурации 1С',
+			placeHolder: 'Например: srv01\\storage или C:\\storage',
+			ignoreFocusOut: true,
+		});
+		if (storageAddress === undefined || storageAddress.trim() === '') {
+			return;
+		}
+
+		const ibConnectionParam = await this.vrunner.getIbConnectionParam();
+		const loadFromStorageCmd = getLoadConfigurationFromStorageCommandName();
+		const updateDb = await decideUpdateDb(opts);
+		if (updateDb === undefined) {
+			return;
+		}
+		return this.runIntent(
+			{
+				kind: 'cf.loadFromStorage',
+				src: srcPath,
+				storageAddress: storageAddress.trim(),
+				updateDb,
+				common: ibConnectionParam,
+			},
+			opts, loadFromStorageCmd.title, undefined, loadFromStorageCmd.id
 		);
 	}
 }

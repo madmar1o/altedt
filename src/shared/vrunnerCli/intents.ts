@@ -83,6 +83,14 @@ export type VRunnerIntent =
 	}
 	/** Загрузить конфигурацию в ИБ из .cf-файла. */
 	| { kind: 'cf.loadFileToIb'; file: string; updateDb: boolean; common?: CommonArgs }
+	/**
+	 * Загрузить конфигурацию в ИБ из хранилища 1С.
+	 *
+	 * `storageAddress` — адрес хранилища (например, `srv01\storage` или
+	 * `C:\storage`). `src` — каталог исходников, куда сначала выгружается
+	 * конфигурация из хранилища.
+	 */
+	| { kind: 'cf.loadFromStorage'; src: string; storageAddress: string; updateDb: boolean; common?: CommonArgs }
 
 	// ---- Расширения (cfe) ----
 	/**

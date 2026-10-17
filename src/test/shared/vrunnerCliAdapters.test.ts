@@ -67,6 +67,27 @@ suite('vrunnerCli: адаптеры v2/v3', () => {
 		);
 	});
 
+	test('cf.loadFromStorage с обновлением БД', () => {
+		check(
+			{ kind: 'cf.loadFromStorage', src: 'src/cf', storageAddress: 'srv01\\storage', updateDb: true, common: conn },
+			[
+				['load', '--storage', 'srv01\\storage', '--src', 'src/cf', ...conn],
+				['updatedb', ...conn],
+			],
+			[['cf', 'load', '--storage', 'srv01\\storage', '--src', 'src/cf', ...conn]]
+		);
+	});
+
+	test('cf.loadFromStorage без обновления БД', () => {
+		check(
+			{ kind: 'cf.loadFromStorage', src: 'src/cf', storageAddress: 'C:\\storage', updateDb: false, common: conn },
+			[
+				['load', '--storage', 'C:\\storage', '--src', 'src/cf', ...conn],
+			],
+			[['cf', 'load', '--storage', 'C:\\storage', '--src', 'src/cf', '--no-update-db', ...conn]]
+		);
+	});
+
 	test('infobase.updateDb трогает только основную конфигурацию', () => {
 		check(
 			{ kind: 'infobase.updateDb', common: conn },

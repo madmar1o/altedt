@@ -181,6 +181,10 @@ export const AGENT_COMMAND_DESCRIPTIONS: Record<string, AgentCommandDescription>
 		title: 'Загрузить в ИБ объекты конфигурации по списку из objlist.txt',
 		category: CONFIGURATION,
 	},
+	'1c-platform-tools.cf.loadFromStorage': {
+		title: 'Загрузить конфигурацию в ИБ из хранилища 1С',
+		category: CONFIGURATION,
+	},
 	'1c-platform-tools.cf.loadFile': {
 		title: 'Загрузить конфигурацию в ИБ из файла .cf',
 		category: CONFIGURATION,

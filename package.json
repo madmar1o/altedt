@@ -1458,6 +1458,11 @@
         "category": "1С: Конфигурация"
       },
       {
+        "command": "1c-platform-tools.cf.loadFromStorage",
+        "title": "Загрузить из хранилища 1С",
+        "category": "1С: Конфигурация"
+      },
+      {
         "command": "1c-platform-tools.cf.loadFile",
         "title": "Загрузить конфигурацию из 1Cv8.cf",
         "category": "1С: Конфигурация"

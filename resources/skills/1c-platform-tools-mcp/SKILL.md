@@ -58,6 +58,7 @@ description: Инструменты MCP сервера mcp-1c-platform-tools. И
 | `cf_loadInc` | `1c-platform-tools.cf.loadIncrement` | результат | `sha`, `updateDb` |
 | `cf_loadFile` | `1c-platform-tools.cf.loadFile` | результат | `updateDb` |
 | `cf_loadByList` | `1c-platform-tools.cf.loadByList` | отказ | «Загрузка по objlist.txt требует подготовки списка в UI; wait: true недоступен» |
+| `cf_loadFromStorage` | `1c-platform-tools.cf.loadFromStorage` | результат | `updateDb` |
 | `cf_dump` | `1c-platform-tools.cf.dump` | результат | |
 | `cf_dumpInc` | `1c-platform-tools.cf.dumpIncrement` | результат | |
 | `cf_unload` | `1c-platform-tools.cf.unload` | результат | `outputDirectory`, `outputName` |
@@ -66,7 +67,7 @@ description: Инструменты MCP сервера mcp-1c-platform-tools. И
 | `cf_convert` | `1c-platform-tools.cf.convert` | результат | |
 | `cf_makeDist` | `1c-platform-tools.cf.makeDist` | результат | `outputDirectory`, `outputName` |
 
-`infobase_updateDb` обновляет конфигурацию базы отдельно от загрузки. `updateDb: true` у `cf_load`, `cf_loadInc` и `cf_loadFile` делает это тем же запуском. Без параметра загрузка не обновляет базу, если в настройках проекта не задано иное.
+`infobase_updateDb` обновляет конфигурацию базы отдельно от загрузки. `updateDb: true` у `cf_load`, `cf_loadInc`, `cf_loadFile` и `cf_loadFromStorage` делает это тем же запуском. Без параметра загрузка не обновляет базу, если в настройках проекта не задано иное.
 
 ## Расширения
 

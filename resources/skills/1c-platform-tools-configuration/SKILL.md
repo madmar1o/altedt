@@ -17,6 +17,7 @@ description: Загрузка и выгрузка конфигурации 1С. 
 | Загрузить изменения | `1c-platform-tools.cf.loadIncrement` | `cf_loadInc` | результат |
 | Загрузить из 1Cv8.cf | `1c-platform-tools.cf.loadFile` | `cf_loadFile` | результат |
 | Загрузить из objlist.txt | `1c-platform-tools.cf.loadByList` | `cf_loadByList` | отказ |
+| Загрузить из хранилища 1С | `1c-platform-tools.cf.loadFromStorage` | `cf_loadFromStorage` | результат |
 | Выгрузить в исходный код | `1c-platform-tools.cf.dump` | `cf_dump` | результат |
 | Выгрузить изменения | `1c-platform-tools.cf.dumpIncrement` | `cf_dumpInc` | результат |
 | Выгрузить в 1Cv8.cf | `1c-platform-tools.cf.unload` | `cf_unload` | результат |
@@ -29,7 +30,7 @@ description: Загрузка и выгрузка конфигурации 1С. 
 
 ## Параметры
 
-- `cf_load`, `cf_loadInc`, `cf_loadFile`: `updateDb`. Без него база не обновляется, если в настройках проекта не задано иное. `cf_load` с `updateDb: true` обновляет базу тем же запуском.
+- `cf_load`, `cf_loadInc`, `cf_loadFile`, `cf_loadFromStorage`: `updateDb`. Без него база не обновляется, если в настройках проекта не задано иное. `cf_load` с `updateDb: true` обновляет базу тем же запуском.
 - `cf_loadInc`: `sha` — коммит прошлой загрузки, изменения берутся от него до текущего состояния. Пустая строка — полная загрузка. Вызов без `sha` отклоняется и коммит в окне не спрашивает. Значение пишется в `lastUploadedCommit.txt` в каталоге исходников конфигурации. Текущий коммит — `git rev-parse HEAD`. На vanessa-runner 2.x загрузка изменений без обновления базы выполняется полной загрузкой: в stdout будет `[контекст]` с этой оговоркой.
 - `cf_loadByList` при `wait: true` сразу отвечает «Загрузка по objlist.txt требует подготовки списка в UI; wait: true недоступен» и ничего не загружает.
 - `cf_unload`, `cf_compile`, `cf_makeDist`: `outputDirectory`, `outputName` (имя без расширения; переменные `${name}`, `${folder}`, `${version}`, `${gitBranch}`).
