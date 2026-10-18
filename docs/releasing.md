@@ -36,7 +36,7 @@ git pull --rebase origin main
 
 ## 2. Версия
 
-Ориентир — версия в `package.json` (сейчас `0.9.17`), а не `git describe`.
+Ориентир — версия в `package.json` (`X.Y.Z`), а не `git describe`.
 
 > **Тег `v0.9.17` принадлежит другому репозиторию.** `origin` общий с parent-репозиторием
 > workspace: тег `v0.9.17` указывает на коммит в `origin/master`, где лежит конфигурация 1С
@@ -60,7 +60,7 @@ npm version 0.9.18 --no-git-tag-version
 Проверьте, что старая версия не осталась в других файлах:
 
 ```powershell
-git grep -n -I -F "0.9.17" -- . ":(exclude)CHANGELOG.md" ":(exclude)package-lock.json"
+git grep -n -I -F "<OLD_VERSION>" -- . ":(exclude)CHANGELOG.md" ":(exclude)package-lock.json"
 ```
 
 Сейчас версия встречается ещё в заголовке `Dockerfile.test` — обновите её вручную.

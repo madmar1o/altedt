@@ -1,4 +1,4 @@
-# Docker-песочница для тестирования плагина AltEDT v0.9.17
+# Docker-песочница для тестирования плагина AltEDT v0.9.18
 # Сборка:   docker build -t altdt-test -f Dockerfile.test .
 # Запуск:   docker run --rm -it altdt-test /bin/bash
 FROM node:24-slim
