@@ -2608,15 +2608,17 @@ export class VRunnerManager {
 	 * @returns Промис, который разрешается массивом параметров ['--ibconnection', 'строка_подключения']
 	 */
 	public async getIbConnectionParam(ibConnection?: string): Promise<string[]> {
-		// Значения из файла настроек в командную строку не дублируются:
-		// vanessa-runner сам читает свой файл (env.json / autumn-properties.json)
-		// из корня проекта, а CLI-аргумент перекрыл бы его каскад. Флаг
-		// добавляется только для явно заданной строки подключения (например,
-		// из вызова MCP или временных параметров профиля).
+		// Явная строка подключения имеет приоритет.
 		if (ibConnection) {
 			return ['--ibconnection', quoteFileIbConnection(ibConnection)];
 		}
-		return [];
+		// Иначе берём строку подключения из активного профиля (env.json /
+		// autumn-properties.json), чтобы vanessa-runner знал, с какой базой
+		// работать, даже без --settings в командной строке.
+		const configured = await this.getConfiguredIbConnection();
+		return configured
+			? ['--ibconnection', quoteFileIbConnection(configured)]
+			: [];
 	}
 
 	/**

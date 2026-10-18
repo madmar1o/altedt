@@ -1,0 +1,21 @@
+{
+    "vrunner": {
+        "ibconnection": "/F./build/ib",
+        "db-user": "",
+        "db-pwd": "",
+        "root": ".",
+        "workspace": ".",
+        "v8version": "8.5",
+        "locale": "ru",
+        "language": "ru",
+        "additional": "/DisplayAllFunctions /L ru",
+        "ordinaryapp": "-1",
+        "test": {
+            "vanessa": {
+                "vanessasettings": "./tools/VAParams.json",
+                "bddrunner-path": "./oscript_modules/vanessa-automation-single/vanessa-automation-single.epf",
+                "additional": "/DisplayAllFunctions /L ru /DisableStartupDialogs /DisableStartupMessages /AllowExecuteScheduledJobs -Off"
+            }
+        }
+    }
+}
