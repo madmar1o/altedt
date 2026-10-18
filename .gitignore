@@ -1,8 +1,14 @@
 # Вложенный git-репозиторий плагина (живёт отдельно)
 alt-edt/
 
-# Секреты подключения к базам 1С (см. db-list)
+# Файлы 1С (не в git — только проект плагина)
 .v8-project.json
+env.json
+env.*.json
+src/
+test-bases/
+.agents/
+skills-lock.json
 
 # Служебное
 *.log
