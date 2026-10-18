@@ -1,0 +1,35 @@
+# Docker-песочница для тестирования плагина AltEDT v0.9.17
+# Сборка:   docker build -t altdt-test -f Dockerfile.test .
+# Запуск:   docker run --rm -it altdt-test /bin/bash
+FROM node:24-slim
+
+# Системные зависимости для нативных модулей и 1С-инструментов
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    ca-certificates \
+    libicu72 \
+    libssl3 \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV NODE_ENV=development
+ENV NPM_CONFIG_LOGLEVEL=warn
+
+WORKDIR /app
+
+# Копируем файлы плагина
+COPY . .
+
+# Установка зависимостей npm
+RUN npm install --no-audit --no-fund
+
+# Компиляция TypeScript
+RUN npx tsc --noEmit 2>/dev/null || true
+
+# Проверка окружения
+RUN node --version && npm --version
+
+# Запуск тестов по умолчанию
+CMD ["npm", "run", "test:node"]

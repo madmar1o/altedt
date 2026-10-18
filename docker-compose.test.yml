@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  altdt-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: altdt-test-sandbox
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - 1C_PLATFORM_TOOLS__DOCKER__ENABLED=true
+    tty: true
+    stdin_open: true
