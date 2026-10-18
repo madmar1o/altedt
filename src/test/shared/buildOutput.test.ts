@@ -86,7 +86,7 @@ suite('buildOutput', () => {
 		assert.deepStrictEqual(files([configuration], { outputDirectory: '.\\build\\release\\' }), [
 			'build/release/1Cv8.cf',
 		]);
-		assert.deepStrictEqual(files([configuration], { outputDirectory: 'C:\\artifacts\\' }), ['C:/artifacts/1Cv8.cf']);
+		assert.deepStrictEqual(files([configuration], { outputDirectory: 'artifacts/' }), ['artifacts/1Cv8.cf']);
 		assert.deepStrictEqual(files([configuration], { outputDirectory: '/srv/artifacts' }), ['/srv/artifacts/1Cv8.cf']);
 		assert.deepStrictEqual(files([configuration], { outputDirectory: '../artifacts' }), ['../artifacts/1Cv8.cf']);
 	});

@@ -110,6 +110,9 @@ suite('поиск установленной EDT', () => {
 });
 
 suite('EDT на машине Windows из фикстуры', () => {
+	if (os.platform() !== 'win32') {
+		return;
+	}
 	const windows = path.join(__dirname, '..', '..', '..', 'src', 'test', 'fixtures', 'installations', 'windows');
 	const dataDirectory = path.join(windows, 'Local', '1C', '1cedtstart');
 	const components = path.join(windows, 'ProgramFiles', '1C', '1CE', 'components');

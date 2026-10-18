@@ -13,8 +13,8 @@ function makeCase(partial: Partial<JUnitCase> & { name: string }): JUnitCase {
 
 suite('batchRouter', () => {
 	const files = [
-		{ id: 'a', fsPath: 'C:\\proj\\tests\\unit\\Сервисы\\ТестСервисEDT.os' },
-		{ id: 'b', fsPath: 'C:\\proj\\tests\\unit\\Движки\\ТестДвижокIbCmd.os' }
+		{ id: 'a', fsPath: 'proj/tests/unit/Сервисы/ТестСервисEDT.os' },
+		{ id: 'b', fsPath: 'proj/tests/unit/Движки/ТестДвижокIbCmd.os' }
 	];
 
 	test('раскладывает по относительному пути в атрибуте file', () => {
@@ -39,7 +39,7 @@ suite('batchRouter', () => {
 	});
 
 	test('раскладывает по абсолютному пути с обратными слэшами', () => {
-		const cases = [makeCase({ name: 'Тест1', file: 'C:\\proj\\tests\\unit\\Сервисы\\ТестСервисEDT.os' })];
+		const cases = [makeCase({ name: 'Тест1', file: 'tests/unit/Сервисы/ТестСервисEDT.os' })];
 
 		const { byFile } = routeReportCases(cases, files);
 		assert.deepStrictEqual(byFile.get('a')?.map((c) => c.name), ['Тест1']);
@@ -73,7 +73,7 @@ suite('batchRouter', () => {
 
 	test('совпадение по имени файла не цепляет «хвостовой» файл', () => {
 		// tests.os не должен сматчиться на mytests.os (граница сегмента)
-		const onlyFiles = [{ id: 'x', fsPath: 'C:\\proj\\tests\\mytests.os' }];
+		const onlyFiles = [{ id: 'x', fsPath: 'proj/tests/mytests.os' }];
 		const cases = [makeCase({ name: 'Т', file: 'tests.os' })];
 
 		const { unrouted } = routeReportCases(cases, onlyFiles);
@@ -82,8 +82,8 @@ suite('batchRouter', () => {
 
 	test('неоднозначный basename разводится по полному пути', () => {
 		const dupFiles = [
-			{ id: 'u', fsPath: 'C:\\proj\\tests\\unit\\Общий.os' },
-			{ id: 'e', fsPath: 'C:\\proj\\tests\\e2e\\Общий.os' }
+			{ id: 'u', fsPath: 'proj/tests/unit/Общий.os' },
+			{ id: 'e', fsPath: 'proj/tests/e2e/Общий.os' }
 		];
 		const cases = [makeCase({ name: 'Т', file: 'tests/e2e/Общий.os' })];
 
@@ -94,9 +94,9 @@ suite('batchRouter', () => {
 
 	test('Vanessa: раскладка по имени функционала из classname и suiteName', () => {
 		const vaFiles = [
-			{ id: 'f1', fsPath: 'C:\proj\features\Смоук\ЗапускПриложения.feature', label: 'Запуск приложения' },
-			{ id: 'f2', fsPath: 'C:\proj\features\Справочники\Валюты.feature', label: 'Справочник Валюты' },
-			{ id: 'f3', fsPath: 'C:\proj\features\Справочники\ПримерыПадений.feature', label: 'Примеры падающих сценариев' }
+			{ id: 'f1', fsPath: 'proj/features/Смоук/ЗапускПриложения.feature', label: 'Запуск приложения' },
+			{ id: 'f2', fsPath: 'proj/features/Справочники/Валюты.feature', label: 'Справочник Валюты' },
+			{ id: 'f3', fsPath: 'proj/features/Справочники/ПримерыПадений.feature', label: 'Примеры падающих сценариев' }
 		];
 		const cases = [
 			makeCase({ name: 'Подключение тестового клиента', suiteName: 'Запуск приложения', className: 'Смоук.Запуск приложения' }),
@@ -112,7 +112,7 @@ suite('batchRouter', () => {
 	});
 
 	test('без заголовка файла кейсы Vanessa остаются непривязанными', () => {
-		const vaFiles = [{ id: 'f1', fsPath: 'C:\proj\features\Валюты.feature' }];
+		const vaFiles = [{ id: 'f1', fsPath: 'proj/features/Валюты.feature' }];
 		const cases = [makeCase({ name: 'Открытие списка валют', suiteName: 'Справочник Валюты', className: 'Справочники.Справочник Валюты' })];
 
 		const { byFile, unrouted } = routeReportCases(cases, vaFiles);

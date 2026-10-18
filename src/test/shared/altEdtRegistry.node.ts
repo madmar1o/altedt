@@ -16,7 +16,7 @@ import type { IBaseProvider, ILaunchMode, ICommandGroup, IPanel } from '../../sh
 import type { InfobaseEntry } from '../../shared/infobaseList';
 
 function makeBaseEntry(name: string): InfobaseEntry {
-	return { name, connect: `File="C:\\${name}";`, folder: '/Тест', orderInList: 0, orderInTree: 0 };
+	return { name, connect: `File="${name}";`, folder: '/Тест', orderInList: 0, orderInTree: 0 };
 }
 
 function makeBaseProvider(id: string, folder: string): IBaseProvider {

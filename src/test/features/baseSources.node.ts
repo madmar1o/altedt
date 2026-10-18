@@ -37,7 +37,7 @@ describe('реестр проекта .v8-project.json', () => {
 			path.join(root, '.v8-project.json'),
 			JSON.stringify({
 				databases: [
-					{ id: 'dev', name: 'Разработка', type: 'file', path: 'C:\\Bases\\Dev' },
+					{ id: 'dev', name: 'Разработка', type: 'file', path: 'Bases/Dev' },
 					{ id: 'test', name: 'Тестовая', type: 'server', server: 'srv01', ref: 'MyApp_Test' },
 				],
 				default: 'dev',
@@ -46,7 +46,7 @@ describe('реестр проекта .v8-project.json', () => {
 		const entries = readProjectRegistry(root);
 		assert.equal(entries.length, 2);
 		assert.equal(entries[0].name, 'Разработка');
-		assert.equal(entries[0].connect, 'File="C:\\Bases\\Dev";');
+		assert.equal(entries[0].connect, `File="${path.resolve(root, 'Bases/Dev')}";`);
 		assert.equal(entries[0].folder, PROJECT_FOLDER);
 		assert.equal(entries[1].connect, 'Srvr="srv01";Ref="MyApp_Test";');
 		assert.equal(entries[1].folder, PROJECT_FOLDER);
@@ -67,7 +67,7 @@ describe('реестр проекта .v8-project.json', () => {
 		fs.writeFileSync(
 			path.join(root, '.v8-project.json'),
 			JSON.stringify({
-				databases: [{ id: 'vc', type: 'file', path: 'C:\\vc' }, { id: 'broken', name: 'Без подключения' }],
+				databases: [{ id: 'vc', type: 'file', path: 'vc' }, { id: 'broken', name: 'Без подключения' }],
 			})
 		);
 		const entries = readProjectRegistry(root);
@@ -136,7 +136,7 @@ describe('профили запуска', () => {
 describe('readWorkspaceBases', () => {
 	const platformEntry: InfobaseEntry = {
 		name: 'Платформенная',
-		connect: 'File="C:\\plat";',
+		connect: 'File="plat";',
 		folder: '/',
 		orderInList: 1,
 		orderInTree: 1,
@@ -146,7 +146,7 @@ describe('readWorkspaceBases', () => {
 		const root = makeRoot();
 		fs.writeFileSync(
 			path.join(root, '.v8-project.json'),
-			JSON.stringify({ databases: [{ id: 'p', name: 'Из реестра', type: 'file', path: 'C:\\p' }] })
+			JSON.stringify({ databases: [{ id: 'p', name: 'Из реестра', type: 'file', path: 'p' }] })
 		);
 		fs.writeFileSync(path.join(root, 'env.json'), JSON.stringify({ default: { '--ibconnection': '/F/tmp/prof' } }));
 		const merged = readWorkspaceBases([root], () => [platformEntry]);
@@ -158,10 +158,18 @@ describe('readWorkspaceBases', () => {
 
 	test('дубль имени и строки подключения отбрасывается', () => {
 		const root = makeRoot();
+		const resolvedPlat = path.resolve(root, 'plat');
 		fs.writeFileSync(
 			path.join(root, '.v8-project.json'),
-			JSON.stringify({ databases: [{ id: 'x', name: 'Платформенная', type: 'file', path: 'C:\\plat' }] })
+			JSON.stringify({ databases: [{ id: 'x', name: 'Платформенная', type: 'file', path: resolvedPlat }] })
 		);
+		const platformEntry: InfobaseEntry = {
+			name: 'Платформенная',
+			connect: `File="${resolvedPlat}";`,
+			folder: '/',
+			orderInList: 1,
+			orderInTree: 1,
+		};
 		const merged = readWorkspaceBases([root], () => [platformEntry]);
 		assert.equal(merged.length, 1);
 		assert.equal(merged[0].folder, '/');

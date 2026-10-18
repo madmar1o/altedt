@@ -80,11 +80,11 @@ suite('vrunnerCli: адаптеры v2/v3', () => {
 
 	test('cf.loadFromStorage без обновления БД', () => {
 		check(
-			{ kind: 'cf.loadFromStorage', src: 'src/cf', storageAddress: 'C:\\storage', updateDb: false, common: conn },
+			{ kind: 'cf.loadFromStorage', src: 'src/cf', storageAddress: 'storage', updateDb: false, common: conn },
 			[
-				['load', '--storage', 'C:\\storage', '--src', 'src/cf', ...conn],
+				['load', '--storage', 'storage', '--src', 'src/cf', ...conn],
 			],
-			[['cf', 'load', '--storage', 'C:\\storage', '--no-update-db', ...conn, 'src/cf']]
+			[['cf', 'load', '--storage', 'storage', '--no-update-db', ...conn, 'src/cf']]
 		);
 	});
 

@@ -39,13 +39,13 @@ const intentOf = (args: string[]): VRunnerIntent => JSON.parse(args[0]) as VRunn
 suite('xunitAdapter', () => {
 	test('epfTestSourceInfo: стандартная структура decompileepf', () => {
 		const info = epfTestSourceInfo(
-			'C:\\proj\\src\\tests\\Тесты_Сложение\\Тесты_Сложение\\Ext\\ObjectModule.bsl'
+			'proj/src/tests/Тесты_Сложение/Тесты_Сложение/Ext/ObjectModule.bsl'
 		);
 		assert.ok(info);
 		assert.strictEqual(info.processorName, 'Тесты_Сложение');
 		assert.strictEqual(
 			info.processorDir,
-			path.join('C:', 'proj', 'src', 'tests', 'Тесты_Сложение')
+			path.join('proj', 'src', 'tests', 'Тесты_Сложение')
 		);
 	});
 

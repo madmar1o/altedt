@@ -12,7 +12,7 @@ import { ProcessOutputDecoder, decodeProcessOutput, looksUtf16le, pickFallbackEn
 const PHRASE = 'Требуемая версия OneScript: 2.0.0';
 const MIXED = 'compile - Сборка cf-файла из исходников.';
 // Лаунчер 1cedtcli пишет в stderr в UTF-16LE без BOM
-const LAUNCHER = 'Failed to copy file C:\\edt\\1cedtcli-startup.txt: Процесс не может получить доступ к файлу';
+const LAUNCHER = 'Failed to copy file edt/1cedtcli-startup.txt: Процесс не может получить доступ к файлу';
 
 /** Кодирует строку в однобайтовую кодовую страницу через обратную таблицу TextDecoder. */
 function encodeSingleByte(text: string, encoding: string): Buffer {

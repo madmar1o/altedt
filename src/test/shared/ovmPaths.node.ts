@@ -4,16 +4,17 @@
  */
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import { withBinDirFirst, withSelectedEngine } from '../../shared/ovmPaths';
 
-const OVM_BIN = path.join('C:', 'Users', 'user', 'AppData', 'Local', 'ovm', 'current', 'bin');
-const SYSTEM_BIN = path.join('C:', 'Program Files', 'OneScript', 'bin');
+const OVM_BIN = path.join(os.homedir(), 'ovm', 'current', 'bin');
+const SYSTEM_BIN = path.join(os.homedir(), 'OneScript', 'bin');
 
 describe('withBinDirFirst', () => {
 	test('каталог встаёт перед прежним PATH', () => {
-		const env = withBinDirFirst({ PATH: `${SYSTEM_BIN}${path.delimiter}C:\\Windows` }, OVM_BIN);
-		assert.equal(env.PATH, `${OVM_BIN}${path.delimiter}${SYSTEM_BIN}${path.delimiter}C:\\Windows`);
+		const env = withBinDirFirst({ PATH: `${SYSTEM_BIN}${path.delimiter}${path.join(os.homedir(), 'Windows')}` }, OVM_BIN);
+		assert.equal(env.PATH, `${OVM_BIN}${path.delimiter}${SYSTEM_BIN}${path.delimiter}${path.join(os.homedir(), 'Windows')}`);
 	});
 
 	test('на Windows переменная называется Path: регистр не теряется', () => {

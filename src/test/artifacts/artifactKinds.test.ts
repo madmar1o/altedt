@@ -3,7 +3,7 @@ import { binaryArtifactKind } from '../../features/artifacts/artifactKinds';
 
 suite('artifactKinds: вид бинарного файла 1С', () => {
 	test('вид определяется по расширению без учёта регистра', () => {
-		assert.strictEqual(binaryArtifactKind('C:\\build\\1Cv8.CF')?.label, 'Конфигурация');
+		assert.strictEqual(binaryArtifactKind('build/1Cv8.CF')?.label, 'Конфигурация');
 		assert.strictEqual(binaryArtifactKind('build/out/Ext.cfe')?.icon, 'extension.svg');
 		assert.strictEqual(
 			binaryArtifactKind('build/epf/Обработка.epf')?.decompileCommand,

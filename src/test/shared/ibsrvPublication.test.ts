@@ -21,7 +21,7 @@ suite('ibsrvPublication', () => {
 		const yaml = buildServerConfigYaml({
 			host: 'localhost',
 			port: 8314,
-			dbPath: 'C:\\proj\\build\\ib',
+			dbPath: 'proj/build/ib',
 			infobaseName: 'DefAlias',
 			distributeLicenses: true,
 			base: 'ib',
@@ -38,7 +38,7 @@ suite('ibsrvPublication', () => {
 				'  address: localhost',
 				'  port: 8314',
 				'database:',
-				'  path: C:\\proj\\build\\ib',
+				'  path: proj/build/ib',
 				'infobase:',
 				'  name: DefAlias',
 				'  distribute-licenses: yes',
@@ -130,7 +130,7 @@ suite('ibsrvPublication', () => {
 		const yaml = buildServerConfigYaml({
 			host: 'localhost',
 			port: 8314,
-			dbPath: 'C:\\proj\\build\\ib',
+			dbPath: 'proj/build/ib',
 			infobaseName: 'DefAlias',
 			distributeLicenses: true,
 			base: 'ib',
@@ -143,7 +143,7 @@ suite('ibsrvPublication', () => {
 		assert.deepStrictEqual(parseServerConfigParams(yaml), {
 			host: 'localhost',
 			port: 8314,
-			dbPath: 'C:\\proj\\build\\ib',
+			dbPath: 'proj/build/ib',
 			base: '/ib',
 			distributeLicenses: true,
 			odata: true,
@@ -166,8 +166,8 @@ suite('ibsrvPublication', () => {
 	});
 
 	test('parseServerConfigParams: каталог базы с пробелами и концами строк Windows', () => {
-		const yaml = 'server:\r\n  port: 8314\r\ndatabase:\r\n  path: C:\\Мои проекты\\build\\ib \r\ninfobase:\r\n  name: DefAlias\r\n';
-		assert.strictEqual(parseServerConfigParams(yaml).dbPath, 'C:\\Мои проекты\\build\\ib');
+		const yaml = 'server:\r\n  port: 8314\r\ndatabase:\r\n  path: Мои проекты/build/ib \r\ninfobase:\r\n  name: DefAlias\r\n';
+		assert.strictEqual(parseServerConfigParams(yaml).dbPath, 'Мои проекты/build/ib');
 	});
 
 	test('parseServerConfigParams: пустой ввод → пусто', () => {

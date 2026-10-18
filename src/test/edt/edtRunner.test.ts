@@ -117,12 +117,12 @@ suite('причина неудачной команды 1cedtcli', () => {
 	// Строки вывода 1С:EDT 2026.1
 	test('занятая рабочая область', () => {
 		const output =
-			"Не удалось запустить 1C:EDT CLI по причине того, что рабочая область 'C:\\проект\\build\\edt-workspace' уже используется другим приложением.";
+			"Не удалось запустить 1C:EDT CLI по причине того, что рабочая область 'проект/build/edt-workspace' уже используется другим приложением.";
 
 		assert.ok(explainEdtFailure(output)?.includes('Рабочая область 1С:EDT занята'));
 		assert.ok(
 			explainEdtFailure(
-				"Could not launch 1C:EDT CLI because the associated workspace 'C:\\ws' is currently in use by another application."
+				"Could not launch 1C:EDT CLI because the associated workspace 'ws' is currently in use by another application."
 			)?.includes('занята')
 		);
 	});
@@ -255,11 +255,11 @@ suite('нераспознанный отказ 1cedtcli', () => {
 		const output = [
 			'[Fatal Error] :1:1: Premature end of file.',
 			'',
-			'  edtsh: Не найдено файлов платформенной XML выгрузки в C:\\dump',
+			'  edtsh: Не найдено файлов платформенной XML выгрузки в dump',
 			'',
 		].join('\r\n');
 
-		assert.strictEqual(edtErrorLine(output), 'edtsh: Не найдено файлов платформенной XML выгрузки в C:\\dump');
+		assert.strictEqual(edtErrorLine(output), 'edtsh: Не найдено файлов платформенной XML выгрузки в dump');
 	});
 
 	test('без вывода остаётся код возврата', () => {
@@ -270,13 +270,13 @@ suite('нераспознанный отказ 1cedtcli', () => {
 
 	test('отказ лаунчера в UTF-16LE читается', () => {
 		const stderr = Buffer.from(
-			'Failed to copy file C:\\edt\\1cedtcli-startup.txt to C:\\Temp\\1cedtcli-startup.txt: Процесс не может получить доступ к файлу\r\n',
+			'Failed to copy file edt/1cedtcli-startup.txt to Temp/1cedtcli-startup.txt: Процесс не может получить доступ к файлу\r\n',
 			'utf16le'
 		);
 
 		assert.strictEqual(
 			describeEdtFailure(decodeProcessOutput(stderr), 1),
-			'Команда 1С:EDT завершилась с кодом 1: Failed to copy file C:\\edt\\1cedtcli-startup.txt to C:\\Temp\\1cedtcli-startup.txt: Процесс не может получить доступ к файлу'
+			'Команда 1С:EDT завершилась с кодом 1: Failed to copy file edt/1cedtcli-startup.txt to Temp/1cedtcli-startup.txt: Процесс не может получить доступ к файлу'
 		);
 	});
 

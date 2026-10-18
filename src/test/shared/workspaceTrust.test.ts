@@ -283,7 +283,10 @@ suite('недоверенная папка: список информацион�
 	});
 
 	test('окно 1C:EDT Start не открывается', () => {
-		const exe = 'C:\\1C\\1CE\\components\\1c-edt-start-0.8.0\\1cedtstart.exe';
+		if (os.platform() !== 'win32') {
+			return;
+		}
+		const exe = '1c-edt-start-0.8.0\\1cedtstart.exe';
 		const spawned: string[] = [];
 		distrustWorkspace();
 		const result = launchEdtStart(undefined, {

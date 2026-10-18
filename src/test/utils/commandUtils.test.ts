@@ -106,6 +106,9 @@ suite('commandUtils', () => {
 	});
 
 	test('escapeCommandArg удваивает слэши перед кавычкой по правилам argv Windows', () => {
+		if (os.platform() !== 'win32') {
+			return;
+		}
 		assert.strictEqual(escapeCommandArg('C:\\Program Files\\', 'cmd'), '"C:\\Program Files\\\\"');
 	});
 

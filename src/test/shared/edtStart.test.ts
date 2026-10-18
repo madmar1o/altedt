@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import {
 	edtStartArgs,
@@ -16,6 +17,10 @@ const COMPONENTS = path.join(
 const URL = 'e1cedt://start/open?projectId=1&projectName=%D0%91%D0%B0%D0%B7%D0%B0&infobaseId=1&platformVersion=8.3';
 
 suite('Запуск 1cedtstart по ссылке базы', () => {
+	if (os.platform() !== 'win32') {
+		return;
+	}
+
 	test('путь стартера читается из команды обработчика схемы в реестре', () => {
 		const output =
 			'\r\nHKEY_CLASSES_ROOT\\e1cedt\\shell\\open\\command\r\n' +

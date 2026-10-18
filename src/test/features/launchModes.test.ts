@@ -8,7 +8,7 @@ suite('launchModes: extraArgs в launchInfobase', () => {
 		const spec = cestartSpec('enterpriseThick');
 		assert.ok(spec);
 		const result = launchInfobase('Тестовая', spec.mode, {
-			find: () => ({ binary: 'C:\\1cestart.exe', bases: [] }),
+			find: () => ({ binary: '1cestart.exe', bases: [] }),
 			exists: () => true,
 			extraArgs: spec.extraArgs,
 			spawn: (command, args) => {
@@ -27,7 +27,7 @@ suite('launchModes: extraArgs в launchInfobase', () => {
 		const spec = cestartSpec('debug');
 		assert.ok(spec);
 		const result = launchInfobase('Тестовая', spec.mode, {
-			find: () => ({ binary: 'C:\\1cestart.exe', bases: [] }),
+			find: () => ({ binary: '1cestart.exe', bases: [] }),
 			exists: () => true,
 			extraArgs: spec.extraArgs,
 			spawn: () => undefined,
@@ -38,7 +38,7 @@ suite('launchModes: extraArgs в launchInfobase', () => {
 
 	test('без extraArgs список ключей не меняется', () => {
 		const result = launchInfobase('Тестовая', 'ENTERPRISE', {
-			find: () => ({ binary: 'C:\\1cestart.exe', bases: [] }),
+			find: () => ({ binary: '1cestart.exe', bases: [] }),
 			exists: () => true,
 			spawn: () => undefined,
 		});

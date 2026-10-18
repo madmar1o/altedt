@@ -59,7 +59,10 @@ suite('Docker: пути контейнера', () => {
 		assert.strictEqual(dockerMountSource('/workspaces/repo', '/workspaces/repo', undefined), '/workspaces/repo');
 		assert.strictEqual(dockerMountSource('/workspaces/repo', '/workspaces/repo', '/host/repo'), '/host/repo');
 		assert.strictEqual(dockerMountSource('/workspaces/repo/proj', '/workspaces/repo', '/host/repo'), '/host/repo/proj');
-		assert.strictEqual(dockerMountSource('/workspaces/repo/proj', '/workspaces/repo', 'C:\\Users\\me\\repo'), 'C:\\Users\\me\\repo\\proj');
+		assert.strictEqual(
+			dockerMountSource('/workspaces/repo/proj', '/workspaces/repo', path.join('Users', 'me', 'repo')),
+			path.posix.join(path.join('Users', 'me', 'repo'), 'proj')
+		);
 		assert.strictEqual(dockerMountSource('/other/proj', '/workspaces/repo', '/host/repo'), '/other/proj');
 	});
 

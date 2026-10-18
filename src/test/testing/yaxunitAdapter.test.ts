@@ -62,7 +62,7 @@ suite('yaxunitAdapter', () => {
 
 	test('extractModuleName извлекает имя модуля из пути', () => {
 		assert.strictEqual(
-			extractModuleName('C:\\proj\\src\\cfe\\Тесты\\CommonModules\\ОМ_ПроверкаЗаписи\\Module.bsl'),
+			extractModuleName('proj/src/cfe/Тесты/CommonModules/ОМ_ПроверкаЗаписи/Module.bsl'),
 			'ОМ_ПроверкаЗаписи'
 		);
 		assert.strictEqual(
@@ -106,7 +106,7 @@ suite('yaxunitAdapter', () => {
 	test('buildRunPlan: весь модуль — filter.modules, подмножество — filter.tests', async () => {
 		const adapter = new YaxunitAdapter(VRunnerManager.getInstance());
 		const reportDir = await fs.mkdtemp(path.join(os.tmpdir(), 'yaxunit-test-'));
-		const fileUri = vscode.Uri.file('C:\\proj\\src\\cfe\\T\\CommonModules\\ОМ_Тесты\\Module.bsl');
+		const fileUri = vscode.Uri.file('proj/src/cfe/T/CommonModules/ОМ_Тесты/Module.bsl');
 
 		try {
 			const fullPlan = await adapter.buildRunPlan({ fileUri }, reportDir);

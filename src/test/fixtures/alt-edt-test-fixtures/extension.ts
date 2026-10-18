@@ -11,7 +11,7 @@ import type { InfobaseEntry } from '../../../shared/infobaseList';
 function makeFixtureBase(name: string): InfobaseEntry {
 	return {
 		name,
-		connect: `File="C:\\fixtures\\${name}";`,
+		connect: `File="fixtures/${name}";`,
 		folder: '/Фикстуры',
 		orderInList: 0,
 		orderInTree: 0,

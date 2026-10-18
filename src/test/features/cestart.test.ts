@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import {
 	cestartArgs,
@@ -16,11 +17,11 @@ suite('1cestart', () => {
 	test('окно запуска платформы открывается стартером без параметров', () => {
 		const spawned: { command: string; args: readonly string[] }[] = [];
 		const result = launchStartWindow({
-			find: () => ({ binary: 'C:\\1C\\1cestart.exe', bases: [] }),
+			find: () => ({ binary: '1cestart.exe', bases: [] }),
 			spawn: (command, args) => spawned.push({ command, args }),
 		});
 		assert.ok(result.ok);
-		assert.deepStrictEqual(spawned, [{ command: 'C:\\1C\\1cestart.exe', args: [] }]);
+		assert.deepStrictEqual(spawned, [{ command: '1cestart.exe', args: [] }]);
 	});
 
 	test('имя файла зависит от ОС', () => {
@@ -52,10 +53,10 @@ suite('1cestart', () => {
 	test('одноимённые базы открываются по строке подключения, без /IBName', () => {
 		assert.deepStrictEqual(
 			cestartArgs('ENTERPRISE', 'Информационная база', {
-				connect: 'File="C:\\bases\\demo";',
+				connect: 'File="bases/demo";',
 				useIbName: false,
 			}),
-			['ENTERPRISE', '/F"C:\\bases\\demo"', '/AppAutoCheckVersion']
+			['ENTERPRISE', '/F"bases/demo"', '/AppAutoCheckVersion']
 		);
 	});
 
@@ -118,6 +119,9 @@ suite('1cestart', () => {
 	});
 
 	test('на Windows start получает кавычки вокруг exe и ключи 1С как есть', () => {
+		if (os.platform() !== 'win32') {
+			return;
+		}
 		const exe = 'C:\\Program Files\\1cv8\\common\\1cestart.exe';
 		const invocation = windowsStartInvocation(exe, ['ENTERPRISE', '/F"C:\\bases\\demo"']);
 		assert.deepStrictEqual(invocation.args, [
@@ -133,8 +137,8 @@ suite('1cestart', () => {
 	test('нет каталога файловой базы — не запускаем стартер', () => {
 		const spawned: string[] = [];
 		const result = launchInfobase('Демо', 'ENTERPRISE', {
-			find: () => ({ binary: 'C:\\1cestart.exe', bases: [] }),
-			connect: 'File="C:\\нет-такой-базы";',
+			find: () => ({ binary: '1cestart.exe', bases: [] }),
+			connect: 'File="нет-такой-базы";',
 			exists: () => false,
 			spawn: (command) => {
 				spawned.push(command);
@@ -145,7 +149,7 @@ suite('1cestart', () => {
 			assert.match(result.message, /не найден/i);
 		}
 		assert.deepStrictEqual(spawned, []);
-		assert.strictEqual(missingFileInfobase('File="C:\\x";', () => false), 'C:\\x');
+		assert.strictEqual(missingFileInfobase('File="x";', () => false), 'x');
 	});
 
 	test('пустое имя не запускает клиент', () => {

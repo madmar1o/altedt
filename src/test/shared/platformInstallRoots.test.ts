@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import { findRac, listRacVersions } from '../../features/clusters/racLocator';
 import { resolveDebugPlatform } from '../../features/debug/debugConfigurations';
@@ -29,6 +30,10 @@ function windowsRoots(): string[] {
 }
 
 suite('каталоги установки платформы', () => {
+	if (os.platform() !== 'win32') {
+		return;
+	}
+
 	test('InstalledLocation читается из обоих файлов стартера, общий первым', () => {
 		const files = cestartConfigFiles('win32', WINDOWS_ENV, WINDOWS);
 		assert.deepStrictEqual(files, [
@@ -74,6 +79,10 @@ suite('каталоги установки платформы', () => {
 });
 
 suite('платформа, установленная для одного пользователя', () => {
+	if (os.platform() !== 'win32') {
+		return;
+	}
+
 	const perUser = path.join(WINDOWS, 'Local', 'Programs', '1cv8_x64');
 	const programFiles = path.join(WINDOWS, 'ProgramFiles', '1cv8');
 

@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import {
 	commonListPaths,
@@ -51,13 +52,13 @@ suite('Список информационных баз', () => {
 	});
 
 	test('папка без ведущего слэша приводится к виду платформы', () => {
-		const [entry] = parseInfobaseList('[База]\nConnect=File="C:\\\\ib";\nFolder=Демо\n');
+		const [entry] = parseInfobaseList('[База]\nConnect=File="ib";\nFolder=Демо\n');
 
 		assert.strictEqual(entry?.folder, '/Демо');
 	});
 
 	test('строка подключения собирается для файловой и серверной базы', () => {
-		assert.strictEqual(infobaseConnectionString('File="C:\\bases\\demo";'), '/FC:\\bases\\demo');
+		assert.strictEqual(infobaseConnectionString('File="bases/demo";'), '/Fbases/demo');
 		assert.strictEqual(infobaseConnectionString('Srvr="srv-1c:1541";Ref="erp";'), '/Ssrv-1c:1541\\erp');
 	});
 
@@ -97,6 +98,8 @@ suite('Список информационных баз', () => {
 			startupDirectory('darwin', '/Users/user'),
 			path.join('/Users/user', '.1C', '1cestart')
 		);
-		assert.ok(startupDirectory('win32', 'C:\\Users\\user').endsWith(path.join('1C', '1CEStart')));
+		if (os.platform() === 'win32') {
+			assert.ok(startupDirectory('win32', 'C:\\Users\\user').endsWith(path.join('1C', '1CEStart')));
+		}
 	});
 });

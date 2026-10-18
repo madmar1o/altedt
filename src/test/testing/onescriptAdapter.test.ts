@@ -4,12 +4,12 @@ import { VRunnerManager } from '../../shared/vrunnerManager';
 import { OneScriptAdapter, packagedefDeclaresDependency } from '../../features/testing/adapters/onescriptAdapter';
 
 suite('onescriptAdapter', () => {
-	const fileUri = vscode.Uri.file('C:\\proj\\tests os\\test_example.os');
+	const fileUri = vscode.Uri.file('proj/tests os/test_example.os');
 
 	test('buildRunPlan (1testrunner): jUnit-отчёт через xddReportPath', async () => {
 		const adapter = new OneScriptAdapter(VRunnerManager.getInstance());
 
-		const plan = await adapter.buildRunPlan({ fileUri }, 'C:\\proj\\build\\report');
+		const plan = await adapter.buildRunPlan({ fileUri }, 'proj/build/report');
 		assert.strictEqual(plan.tool, 'shell');
 		assert.ok(plan.args[0].includes('1testrunner'));
 		assert.ok(plan.args[0].includes('-run "'));
@@ -30,7 +30,7 @@ suite('onescriptAdapter', () => {
 
 		const plan = await adapter.buildRunPlan(
 			{ fileUri, caseNames: ['ТестДолжен_Проверить'] },
-			'C:\\proj\\build\\report'
+			'proj/build/report'
 		);
 		// 1testrunner сам выбирает имя файла отчёта по набору тестов: при точечном
 		// фильтре оно расходится с <файл>.os.xml и отчёт не находится. Поэтому фильтр
@@ -86,15 +86,15 @@ suite('onescriptAdapter', () => {
 		// он отбирает тесты каталогом, а каталога из набора не существует —
 		// батч неприменим, контроллер прогонит файлы поштучно
 		const adapter = new OneScriptAdapter(VRunnerManager.getInstance());
-		const plan = await adapter.buildBatchRunPlan([{ fileUri }], 'C:\\proj\\build\\report');
+		const plan = await adapter.buildBatchRunPlan([{ fileUri }], 'proj/build/report');
 		assert.strictEqual(plan, undefined);
 	});
 
 	test('buildBatchRunPlan: 1testrunner с файлами из разных каталогов — батч недоступен', async () => {
 		const adapter = new OneScriptAdapter(VRunnerManager.getInstance());
 		const plan = await adapter.buildBatchRunPlan(
-			[{ fileUri }, { fileUri: vscode.Uri.file('C:\\proj\\other\\ТестДругой.os') }],
-			'C:\\proj\\build\\report'
+			[{ fileUri }, { fileUri: vscode.Uri.file('proj/other/ТестДругой.os') }],
+			'proj/build/report'
 		);
 		assert.strictEqual(plan, undefined);
 	});
