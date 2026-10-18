@@ -28,7 +28,7 @@
 | 5 | Плагин-механизм: публичный `AltEdtApi` (registerBaseProvider / registerLaunchMode / registerCommandGroup / registerPanel) | ✅ |
 | 6 | Тестовый контур: dry-run, фикстуры-расширения, CI | ✅ |
 | 7 | Дифф-загрузка: git-diff/objlist/UpdateDBCfg → хранилище 1С (`cf.loadFromStorage`) | ✅ |
-| 8 | Полировка: имя AltEDT, иконки, README, опционально `bsl-language-server` | план |
+| 8 | Полировка: имя AltEDT, README | ✅ |
 | 9 | Формы — визуальный дизайнер (последок), REA по бинарнику Конфигуратора | план |
 
 ## Окружение (проверено)
