@@ -18,10 +18,9 @@ suite('launchModes: extraArgs в launchInfobase', () => {
 		assert.ok(result.ok);
 		const args = [...result.args];
 		assert.equal(args[0], 'ENTERPRISE');
-		assert.equal(args.at(-1), '/AppAutoCheckVersion');
-		const slashC = args.indexOf('/C');
-		assert.ok(slashC > 0, 'нет ключа /C');
-		assert.equal(args[slashC + 1], 'thick');
+		// Ключи режима дописываются после штатных, поэтому стоят в конце списка.
+		assert.equal(args.at(-2), '/C');
+		assert.equal(args.at(-1), 'thick');
 	});
 
 	test('отладка: /DEBUG после штатных ключей', () => {

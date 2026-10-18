@@ -11,9 +11,10 @@
  */
 
 import * as vscode from 'vscode';
+import { EXTENSION_ID } from '../../shared/extensionIdentity';
 
 /** Идентификатор расширения для фильтра настроек VS Code. */
-export const SETTINGS_EXT = '@ext:yellow-hammer.1c-platform-tools';
+export const SETTINGS_EXT = `@ext:${EXTENSION_ID}`;
 
 /** Открывает настройки расширения без отбора по разделу. */
 export async function openExtensionSettings(): Promise<void> {

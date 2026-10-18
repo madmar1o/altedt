@@ -20,9 +20,10 @@ import { describePlatformInstallations } from './platformBinary';
 import { projectPlatformRoots } from './platformSettings';
 import { projectConfiguration } from './projectConfiguration';
 import { untrustedWorkspaceBlocks } from './workspaceTrust';
+import { EXTENSION_ID } from './extensionIdentity';
 
 const execFileAsync = promisify(execFile);
-const HOST_EXTENSION_ID = 'yellow-hammer.1c-platform-tools';
+const HOST_EXTENSION_ID = EXTENSION_ID;
 const MCP_EXTENSION_ID = 'yellow-hammer.mcp-1c-platform-tools';
 const CLI_VERSION_TIMEOUT_MS = 5_000;
 

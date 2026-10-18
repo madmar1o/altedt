@@ -74,7 +74,7 @@ suite('vrunnerCli: адаптеры v2/v3', () => {
 				['load', '--storage', 'srv01\\storage', '--src', 'src/cf', ...conn],
 				['updatedb', ...conn],
 			],
-			[['cf', 'load', '--storage', 'srv01\\storage', '--src', 'src/cf', ...conn]]
+			[['cf', 'load', '--storage', 'srv01\\storage', ...conn, 'src/cf']]
 		);
 	});
 
@@ -84,7 +84,7 @@ suite('vrunnerCli: адаптеры v2/v3', () => {
 			[
 				['load', '--storage', 'C:\\storage', '--src', 'src/cf', ...conn],
 			],
-			[['cf', 'load', '--storage', 'C:\\storage', '--src', 'src/cf', '--no-update-db', ...conn]]
+			[['cf', 'load', '--storage', 'C:\\storage', '--no-update-db', ...conn, 'src/cf']]
 		);
 	});
 

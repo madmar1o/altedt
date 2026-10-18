@@ -29,6 +29,7 @@
           "1c-platform-tools.cf.load",
           "1c-platform-tools.cf.loadByList",
           "1c-platform-tools.cf.loadFile",
+          "1c-platform-tools.cf.loadFromStorage",
           "1c-platform-tools.cf.loadIncrement",
           "1c-platform-tools.cf.makeDist",
           "1c-platform-tools.cf.unload",

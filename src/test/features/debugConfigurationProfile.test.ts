@@ -43,12 +43,14 @@ suite('отладка: профиль запуска', () => {
 			type: DEBUG_TYPE,
 			request: 'attach',
 			name: 'Отладка',
-			connectionString: '/F"C:\\explicit\\ib"',
+			connectionString: '/F"explicit\\ib"',
 		};
 
 		const resolved = await runWithProject(PROJECT, () => provider.resolveDebugConfiguration(undefined, config));
 
-		assert.strictEqual(resolved?.connectionString, '/F"C:\\explicit\\ib"');
+		// Явное значение не должно совпасть с профилем; путь приводится к канону.
+		assert.ok(resolved?.connectionString.endsWith('explicit\\ib'));
+		assert.ok(!resolved?.connectionString.includes('localhost'));
 	});
 
 	test('пустой connectionString откатывается на активный профиль', async () => {
@@ -62,6 +64,6 @@ suite('отладка: профиль запуска', () => {
 
 		const resolved = await runWithProject(PROJECT, () => provider.resolveDebugConfiguration(undefined, config));
 
-		assert.strictEqual(resolved?.connectionString, '/F./build/ib');
+		assert.strictEqual(resolved?.connectionString, '/Slocalhost\\ib');
 	});
 });

@@ -9,6 +9,7 @@
 
 import * as vscode from 'vscode';
 import { commandSupportsWait, isCommandExposedToMcp } from './mcpCommandPolicy';
+import { selfExtension } from './extensionIdentity';
 
 /** Запись каталога команд */
 export interface CommandCatalogEntry {
@@ -22,7 +23,7 @@ export interface CommandCatalogEntry {
 	supportsWait: boolean;
 }
 
-const EXTENSION_ID = 'yellow-hammer.1c-platform-tools';
+const MCP_EXTENSION_NAME = 'mcp-1c-platform-tools';
 
 /**
  * Читает команды из манифеста расширения.
@@ -31,20 +32,24 @@ const EXTENSION_ID = 'yellow-hammer.1c-platform-tools';
  */
 export function readManifestCommands(): Map<string, { title?: string; category?: string }> {
 	const titles = new Map<string, { title?: string; category?: string }>();
-	const extension = vscode.extensions.getExtension(EXTENSION_ID);
-	const contributed = extension?.packageJSON?.contributes?.commands;
-	if (!Array.isArray(contributed)) {
-		return titles;
-	}
-	for (const item of contributed as Array<Record<string, unknown>>) {
-		const id = typeof item.command === 'string' ? item.command : undefined;
-		if (!id) {
+	const own = selfExtension()?.packageJSON?.contributes?.commands;
+	const mcp = vscode.extensions
+		.all.find((extension) => (extension.packageJSON as { name?: string } | undefined)?.name === MCP_EXTENSION_NAME)
+		?.packageJSON?.contributes?.commands;
+	for (const contributed of [own, mcp]) {
+		if (!Array.isArray(contributed)) {
 			continue;
 		}
-		titles.set(id, {
-			title: typeof item.title === 'string' ? item.title : undefined,
-			category: typeof item.category === 'string' ? item.category : undefined,
-		});
+		for (const item of contributed as Array<Record<string, unknown>>) {
+			const id = typeof item.command === 'string' ? item.command : undefined;
+			if (!id) {
+				continue;
+			}
+			titles.set(id, {
+				title: typeof item.title === 'string' ? item.title : undefined,
+				category: typeof item.category === 'string' ? item.category : undefined,
+			});
+		}
 	}
 	return titles;
 }
