@@ -89,11 +89,49 @@ npx @vscode/vsce package
 
 ## 5. Прогнать тесты (в Docker-песочнице)
 
-Плагин поддерживает прогон тестов в Docker-контейнере (docker-outside-of-docker):
+### Способ А: готовый Docker-образ (быстрый старт)
 
-### Включение Docker-режима
+Собрать и запустить тесты в одном командном вызове:
 
-В `.vscode/settings.json` или пользовательских настройках:
+```powershell
+# Из корня репозитория alt-edt
+docker build -t altdt-test:v0.9.17 -f Dockerfile.test .
+docker run --rm altdt-test:v0.9.17 npm run test:node
+```
+
+### Способ Б: интерактивная песочница
+
+```powershell
+# Сборка образа
+docker build -t altdt-test:v0.9.17 -f Dockerfile.test .
+
+# Интерактивный запуск с bash
+docker run --rm -it altdt-test:v0.9.17 /bin/bash
+
+# Внутри контейнера:
+cd /app
+npm install          # шаг 2: установить зависимости
+npm run compile      # компиляция TypeScript
+npm run test:node    # шаг 4: прогон node-тестов
+```
+
+### Ожидаемый результат
+
+```
+ℹ tests 247
+ℹ pass 238
+ℹ fail 1      ← 알려진 limitation Linux (см. ниже)
+ℹ cancelled 0
+ℹ skipped 8   ← Windows-специфичные тесты
+```
+
+### Известное ограничение в Docker/Linux
+
+Один тест `на POSIX файл без права на исполнение не situés` (`executableLookup.test.ts`) падает на Linux, так как фикстура `oscript.bat` существует в контейнере и находится `findExecutable`, хотя на Windows этот тест пропускается. Это предуexisting проблема теста, не связанная с изменениями v0.9.17. Все остальные 238 тестов проходят.
+
+### Документация Docker-режима плагина
+
+Включение выполнения команд vrunner внутри контейнера (`.vscode/settings.json`):
 
 ```json
 {
@@ -102,20 +140,7 @@ npx @vscode/vsce package
 }
 ```
 
-### Запуск тестов
-
-```powershell
-cd alt-edt
-npm test
-```
-
-Или только node-тесты (без VS Code):
-
-```powershell
-npm run test:node
-```
-
-Ожидаемый результат: все тесты проходят, `0 failing`.
+Подробнее — в `alt-edt/docs/docker.md`.
 
 ## Версии
 
