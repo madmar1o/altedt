@@ -1,14 +1,14 @@
 <img src="resources/brand/cat.png" alt="" width="88" align="right">
 
-# 1C: Platform Tools
+# AltEDT
 
-[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/yellow-hammer.1c-platform-tools?label=VS%20Marketplace&logo=visualstudiocode&color=0098FF)](https://marketplace.visualstudio.com/items?itemName=yellow-hammer.1c-platform-tools)
-[![Open VSX](https://img.shields.io/open-vsx/v/yellow-hammer/1c-platform-tools?label=Open%20VSX&logo=eclipseide&color=C160EF)](https://open-vsx.org/extension/yellow-hammer/1c-platform-tools)
+[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/alt-edt.alt-edt?label=VS%20Marketplace&logo=visualstudiocode&color=0098FF)](https://marketplace.visualstudio.com/items?itemName=alt-edt.alt-edt)
+[![Open VSX](https://img.shields.io/open-vsx/v/alt-edt/alt-edt?label=Open%20VSX&logo=eclipseide&color=C160EF)](https://open-vsx.org/extension/alt-edt/alt-edt)
 [![OpenYellow](https://openyellow.openintegrations.dev/data/badges/1113279075.png)](https://openyellow.org/grid?filter=top&repo=1113279075)
 [![telegram chat](resources/badges/telegram-chat.png)](https://t.me/wonder_yellow)
 [![Ask Devin](resources/badges/deepwiki-badge.png)](https://deepwiki.com/yellow-hammer/vscode-1c-platform-tools)
 
-Расширение для Visual Studio Code (а также Cursor, Windsurf и VSCodium), которое собирает повседневные инструменты разработки 1С в одном интерфейсе: команды vanessa-runner, навигацию по проектам и артефактам, дерево метаданных, TODO-панель, отладку и интеграцию с AI-агентами. Работает с проектами в формате конфигуратора, 1С:EDT и OneScript.
+AltEDT — форк 1C:Platform Tools с панелью баз из 3 источников, универсальным запуском всех режимов клиентов, мастером профилей, отладкой, плагин-механизмом и дифф-загрузкой. Работает с проектами в формате конфигуратора, 1С:EDT и OneScript.
 
 ![Панель команд 1C: Platform Tools](resources/treeview-screenshot.png)
 
