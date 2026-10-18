@@ -109,7 +109,21 @@ docs(readme): обновить описание панелей
 
 ## Релизы
 
-Релиз выпускается тегом `vX.Y.Z` (`git tag v0.1.0 && git push origin v0.1.0`) или вручную: **Actions** → workflow **Release** → **Run workflow** (параметры: `version`, `skip_publish`, `draft`, `prerelease`). Workflow обновит версию в `package.json`, сгенерирует `CHANGELOG.md` из Conventional Commits, создаст GitHub Release и опубликует расширение в маркетплейсы.
+Полный порядок выпуска — [Выпуск релиза](docs/releasing.md). Кратко: обновите версию
+(`npm version X.Y.Z --no-git-tag-version`), прогоните проверки и `npm run package`,
+закоммитьте `chore(release): vX.Y.Z`, поставьте аннотированный тег `vX.Y.Z` и отправьте
+сначала `main`, затем тег:
+
+```powershell
+git push origin main
+git push origin vX.Y.Z
+```
+
+Тег запускает workflow **Release**: он сверяет версию, генерирует `CHANGELOG.md`
+из Conventional Commits, собирает VSIX, создаёт GitHub Release и публикует расширение
+в маркетплейсы. `CHANGELOG.md` вручную не редактируется. Альтернативный запуск —
+**Actions** → workflow **Release** → **Run workflow** (параметры: `version`, `skip_publish`,
+`draft`, `prerelease`).
 
 Для публикации в секретах репозитория (**Settings** → **Secrets and variables** → **Actions**) должны быть заданы токены:
 

@@ -140,6 +140,10 @@ export default defineConfig({
 					{ text: 'Что писать агенту', link: '/mcp/examples' },
 				],
 			},
+			{
+				text: 'Мейнтейнерам',
+				items: [{ text: 'Выпуск релиза', link: '/releasing' }],
+			},
 		],
 		socialLinks: [
 			{
