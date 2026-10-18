@@ -71,6 +71,42 @@ Parent-репо: коммиты по этапам, последний `52664fe`.
 - Проверено при выключенной нативной Ollama: solcache get/recall работают (score 0.793), ctxsum `ok=true`,
   в VRAM 6.17 из 8 ГиБ (`qwen3:8b` 5.86 + `nomic-embed-text` 0.31).
 
+## Сжатие контекста: переключатель и выгрузка сессии (2026-10-18)
+
+**Команда вкл/выкл сжатия** — `infra/ctxsum/ctxctl.ps1`:
+`status | on | off | toggle [-Threshold N]`. Состояние в `infra/ctxsum/compaction.json`.
+Пока сжатие выключено, шим `ctxsum.ps1` отказывает (exit 3) — единая точка отказа,
+хуки не смогут сжать контекст, даже если о флаге забыли. Ручной вызов: `-Force`.
+
+**qwen3:8b больше не выгружается**: `ollama.ps1 warm` теперь пиннит её с `keep_alive=-1`,
+и ctxsum шлёт `keep_alive=-1` для модели качества (быстрая 2b — `10m`, в 8 ГиБ VRAM
+обе не помещаются). В VRAM держится 5.90 ГиБ.
+
+**Выгрузка сессии агента** — `infra/ctxsum/dump-session.py` (сессии лежат в SQLite
+`~/.local/share/opencode/opencode.db`, схема: `session_v2` + `session_message`):
+```powershell
+docker run --rm -v "$HOME\.local\share\opencode\opencode.db:/data/session.db:ro" `
+  -v "C:\Users\mad\.config\opencode\infra\ctxsum:/tool:ro" -v C:\out:/out `
+  python:3.12-slim python /tool/dump-session.py --db /data/session.db --out /out/transcript.md `
+  --dir "C:\open-project\alt_edt" --max-chars 120000
+```
+Особенности схемы: у пользователя текст в корне `data.text`, у ассистента — `data.content`
+(части `text`/`tool`; `reasoning` отбрасываем); путь проекта записан со слэшами.
+
+**Замер на реальной сессии**: 92 531 → 19 421 символ (−79 %) за 130 с; на выходе
+сводка, факты, решения, открытые задачи, следующий шаг. Результат — `session-handoff.md`.
+
+**Устойчивость ctxsum** (добавлено после падения на длинном диалоге): модель обрезает
+json на длинных ответах → повтор с кратким промптом, затем деление чанка пополам
+(глубина 2), слияние больших дайджестов — попарно; при неудаче отдаётся накопленное.
+`num_predict=2000`.
+
+## Ловушка PS 5.1, задевшая дважды
+
+**Все `.ps1` в `infra` обязаны быть с BOM.** Без BOM PS 5.1 читает файл как ANSI →
+кириллица портится и ломает парсер (`ParserError` на `{` и `}`).
+Проверено: `ctxctl.ps1` и `ctxsum.ps1` не запускались, пока BOM не добавлен.
+
 ## Next Action
 
 Слой 2/3 по решению пользователя: MCP-сервер `ctxsum-mcp` (доступ из Claude Code/Cursor/Cline) и хуки — команда `/compact-local` в OpenCode, `PreCompact`/`SessionStart` в Claude Code. Слой 1 готов и проверен.
