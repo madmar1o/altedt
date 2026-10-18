@@ -5,12 +5,26 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/),
 и этот проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
 
-## [0.9.16] - 2026-10-14
+## [0.9.17] - 2026-10-18
 
+### Новые возможности
+
+- **gitflow:** Добавлена модель ветвления Git Flow (master/develop/feature/release/hotfix)
+- **tdd:** Добавлена методология разработки через тестирование (Red-Green-Refactor)
+- **pre-commit:** Добавлены хуки pre-commit с lint-staged и npm test
+- **testing:** Добавлены утилиты versionUtils с 9 unit-тестами (parseVersion, compareVersions, formatVersion)
 
 ### Исправления
 
-- **vrunner:** Передали явную строку подключения в команду
+- **tests:** Убраны абсолютные Windows-пути (C:\, Z:\) из тестов для кроссплатформенного запуска
+- **tests:** Windows-специфичные тесты обёрнуты в проверку os.platform() === 'win32'
+
+### Документация
+
+- Добавлен GIT_FLOW.md с правилами ветвления и conventional commits
+- Добавлен TDD_METHODOLOGY.md с правилами цикла разработки
+- Добавлен CHANGELOG.md в корне репозитория
+- Обновлён RELEASE.md с инструкцией по установке и патчам
 
 
 ## [0.9.15] - 2026-10-08
