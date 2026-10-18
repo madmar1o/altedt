@@ -107,9 +107,30 @@ json на длинных ответах → повтор с кратким пр�
 кириллица портится и ломает парсер (`ParserError` на `{` и `}`).
 Проверено: `ctxctl.ps1` и `ctxsum.ps1` не запускались, пока BOM не добавлен.
 
+## Слой 2: MCP-сервер ctxsum — любой агент (2026-10-18)
+
+`infra/ctxsum/mcp_server.py` — MCP поверх stdio без зависимостей, ходит в сервис по HTTP.
+Три инструмента: `compact_session`, `summarize_text`, `compaction_status`.
+
+OpenCode подключён в `~/.config/opencode/opencode.json`:
+`mcp.ctxsum = {type:'local', command:['docker','exec','-i','swarm-ctxsum','python','-u','/tool/mcp_server.py']}`.
+Для Claude Code — одна команда: `claude mcp add ctxsum -- docker exec -i swarm-ctxsum python -u /tool/mcp_server.py`
+(тот же stdio; хуки `PreCompact`/`SessionStart` — в `infra/ctxsum/README.md`).
+Команда OpenCode `/compact-local` — `~/.config/opencode/command/compact-local.md`.
+
+Сервис теперь умеет и сам брать сессию: `POST /compact-session {dir,max_chars}` — БД агента
+(`opencode.db`) смонтирован в контейнер read-only. Флаг сжатия сервис читает из
+`compaction.json` (источник истины — хостовый `ctxctl.ps1`) и отказывает кодом 409.
+Проверено сквозным MCP-вызовом: 40 032 → 9 342 симв.
+
+**Ловушка Docker**: правка файла, смонтированного bind-mount'ом, не перезапускает процесс —
+`docker compose up -d` пишет «Container Running», а запросы падают со старой ошибкой.
+После правки `app.py` нужен `docker restart swarm-ctxsum`.
+
 ## Next Action
 
-Слой 2/3 по решению пользователя: MCP-сервер `ctxsum-mcp` (доступ из Claude Code/Cursor/Cline) и хуки — команда `/compact-local` в OpenCode, `PreCompact`/`SessionStart` в Claude Code. Слой 1 готов и проверен.
+Слой 3 (хуки) — по необходимости: Claude Code на машине не установлен, хуки для него
+описаны в `infra/ctxsum/README.md` и включаются одной строкой в `settings.json`.
 
 ## Окружение
 
