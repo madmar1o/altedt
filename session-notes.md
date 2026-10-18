@@ -59,6 +59,18 @@ Parent-репо: коммиты по этапам, последний `52664fe`.
 - solcache (`remember`) требует **нативный** Ollama на 11434; если он не запущен — `Невозможно соединиться`. Поднять: `ollama serve`.
 - Дисплей PS гасит кириллицу — проверять байтами.
 
+## Решение пользователя: Ollama только в Docker (2026-10-18)
+
+Нативный Ollama на хосте (11434) **не поднимаем** — весь инференс роя в контейнере `swarm-ollama`
+(хост-порт `11435`): и субагенты, и эмбеддинги solcache, и ctxsum.
+
+- `solcache.ps1`: `$Ollama = "http://127.0.0.1:11435"`, переопределение `$env:SOLCACHE_OLLAMA`.
+  Симптом старой схемы: `remember` падал «Невозможно соединиться», пока нативный Ollama был выключен.
+- `ollama.ps1 status` показывает нативный порт как «должен быть выключен» и предупреждает, если он поднят.
+- Обновлены правила в `infra/compose.yml`, `skills/solution-cache/SKILL.md`, `skills/swarm/SKILL.md`.
+- Проверено при выключенной нативной Ollama: solcache get/recall работают (score 0.793), ctxsum `ok=true`,
+  в VRAM 6.17 из 8 ГиБ (`qwen3:8b` 5.86 + `nomic-embed-text` 0.31).
+
 ## Next Action
 
 Слой 2/3 по решению пользователя: MCP-сервер `ctxsum-mcp` (доступ из Claude Code/Cursor/Cline) и хуки — команда `/compact-local` в OpenCode, `PreCompact`/`SessionStart` в Claude Code. Слой 1 готов и проверен.
